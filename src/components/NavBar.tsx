@@ -2,8 +2,6 @@
 
 import LanguageSwitch from "./Language";
 import LoginDialog from "./Login";
-import { Button } from "@/components/ui/button";
-import { GitHubLogoIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
 import { usePublicInfo } from "@/contexts/PublicInfoContext";
 import { useTranslation } from "react-i18next";
@@ -26,15 +24,6 @@ const NavBar = () => {
 
         {/* Actions */}
         <div className="flex items-center gap-2">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => window.open("https://github.com/komari-monitor", "_blank")}
-            className="hidden sm:inline-flex"
-          >
-            <GitHubLogoIcon className="h-5 w-5" />
-          </Button>
-
           <LanguageSwitch />
 
           {publicInfo?.private_site ? (

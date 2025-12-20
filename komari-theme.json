@@ -1,9 +1,9 @@
 {
-    "name": "Komari Preview",
-    "short": "KomariPreview", 
-    "description": "Preview theme for Komari Monitor",
+    "name": "Komari Next",
+    "short": "KomariNext", 
+    "description": "NextJS theme for Komari Monitor",
     "version": "1.0.0",
-    "author": "test",
-    "url": "https://github.com/komari-monitor/komari-web",
-    "preview": "preview.png"
+    "author": "tonyliuzj",
+    "url": "https://github.com/tonyliuzj/komari-next",
+    "preview": ""
 }

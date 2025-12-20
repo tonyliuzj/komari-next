@@ -56,26 +56,6 @@ const Footer = () => {
             </p>
           )}
         </div>
-
-        <div className="flex items-center gap-4 text-xs text-muted-foreground">
-          <a
-            href="https://github.com/komari-monitor"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-foreground transition-colors"
-          >
-            GitHub
-          </a>
-          <span>•</span>
-          <a
-            href="https://github.com/komari-monitor/komari/blob/main/LICENSE"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-foreground transition-colors"
-          >
-            License
-          </a>
-        </div>
       </div>
     </footer>
   );
