@@ -2,6 +2,7 @@
 
 import React, { Suspense, useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import { usePathname } from "next/navigation";
 import { Settings, AlertTriangle, Info } from "lucide-react";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -22,6 +23,7 @@ import { useNodeList } from "@/contexts/NodeListContext";
 import { usePublicInfo } from "@/contexts/PublicInfoContext";
 import Loading from "@/components/loading";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
+import InstancePage from "@/components/instance/InstancePage";
 
 // Intelligent speed formatting function
 const formatSpeed = (bytes: number): string => {
@@ -41,14 +43,25 @@ const formatSpeed = (bytes: number): string => {
 
 export default function Dashboard() {
   const [t] = useTranslation();
+  const pathname = usePathname() || "/";
   const { live_data } = useLiveData();
   const { publicInfo } = usePublicInfo();
+  
   // Sync document title with backend-set custom title
   useEffect(() => {
     if (publicInfo?.sitename) {
       document.title = publicInfo.sitename;
     }
   }, [publicInfo?.sitename]);
+  
+  // Client-side routing for SPA behavior with static export
+  const parts = pathname.split("/").filter(Boolean);
+  
+  // Handle /instance/<uuid> routes
+  if (parts[0] === "instance" && parts[1]) {
+    const uuid = parts[1];
+    return <InstancePage uuid={uuid} />;
+  }
   
   //#region 节点数据
   const { nodeList, isLoading, error, refresh } = useNodeList();

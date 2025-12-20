@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
 import dynamic from "next/dynamic";
 import { useLiveData } from "@/contexts/LiveDataContext";
 import { useTranslation } from "react-i18next";
@@ -19,11 +18,13 @@ const DetailsGrid = dynamic(
   { ssr: false }
 );
 
-export default function InstancePage() {
+interface InstancePageProps {
+  uuid: string;
+}
+
+export default function InstancePage({ uuid }: InstancePageProps) {
   const { t } = useTranslation();
   const { onRefresh } = useLiveData();
-  const params = useParams();
-  const uuid = params?.uuid as string;
   const [recent, setRecent] = useState<Record[]>([]);
   const { nodeList } = useNodeList();
   const length = 30 * 5;
