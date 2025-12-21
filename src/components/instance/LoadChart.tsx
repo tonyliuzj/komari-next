@@ -24,7 +24,6 @@ import {
 } from "recharts";
 import { usePublicInfo } from "@/contexts/PublicInfoContext";
 import Loading from "@/components/loading";
-import CircleChart from "@/components/CircleChart";
 
 type LoadChartProps = {
   uuid: string;
@@ -207,25 +206,13 @@ const LoadChart = ({ uuid, data = [] }: LoadChartProps) => {
     return `${value.toFixed(2)}%`;
   };
 
-  const calculatePercentage = (used?: number, total?: number) => {
-    if (used === undefined || used === null || !total || total <= 0) return null;
-    const pct = (used / total) * 100;
-    return Math.min(Math.max(pct, 0), 100);
-  };
-  
-  const ChartTitle = (text: string, percentage: number | null, rightText: React.ReactNode) => {
+  const ChartTitle = (text: string, rightText: React.ReactNode) => {
     return (
       <div className="flex justify-between items-start mb-2 h-[80px]">
         <div className="flex flex-col justify-center gap-1">
              <label className="text-xl font-bold">{text}</label>
-             {/* Simple numeric display if chart is not used but logic requires percentage, though CircleChart is preferred */}
         </div>
         <div className="flex items-center gap-2 h-full">
-            {percentage !== null && !isNaN(percentage) && (
-              <div className="scale-75 origin-right">
-                <CircleChart value={percentage} label="" color={primaryColor} />
-              </div>
-            )}
             <div className="text-sm text-muted-foreground text-right">{rightText}</div>
         </div>
       </div>
@@ -297,7 +284,6 @@ const LoadChart = ({ uuid, data = [] }: LoadChartProps) => {
           <CardContent className="p-4">
           {ChartTitle(
             "CPU",
-            live_data?.cpu?.usage ?? null,
             live_data?.cpu?.usage ? `${live_data.cpu.usage.toFixed(2)}%` : "-"
           )}
           <ChartContainer
@@ -354,7 +340,6 @@ const LoadChart = ({ uuid, data = [] }: LoadChartProps) => {
           <CardContent className="p-4">
           {ChartTitle(
             "Ram",
-            calculatePercentage(live_data?.ram?.used, Number(node?.mem_total)),
             <div className="flex flex-col items-end gap-0 text-sm">
               <label>
                 {live_data?.ram?.used
@@ -469,7 +454,6 @@ const LoadChart = ({ uuid, data = [] }: LoadChartProps) => {
           <CardContent className="p-4">
           {ChartTitle(
             "Disk",
-            calculatePercentage(live_data?.disk?.used, Number(node?.disk_total)),
             live_data?.disk?.used
               ? `${formatBytes(live_data.disk.used)} / ${formatBytes(
                   node?.disk_total || 0
@@ -531,7 +515,6 @@ const LoadChart = ({ uuid, data = [] }: LoadChartProps) => {
           <CardContent className="p-4">
           {ChartTitle(
             t("nodeCard.networkSpeed"),
-            null,
             <div className="flex flex-col items-end gap-0 text-sm">
               <span>
                 ↑ {formatBytes(live_data?.network.up || 0)}
@@ -609,7 +592,6 @@ const LoadChart = ({ uuid, data = [] }: LoadChartProps) => {
           <CardContent className="p-4">
           {ChartTitle(
             t("chart.connections"),
-            null,
             <div className="flex flex-col items-end gap-0 text-sm">
               <span>TCP: {live_data?.connections.tcp}</span>
               <span>UDP: {live_data?.connections.udp}</span>
@@ -678,7 +660,7 @@ const LoadChart = ({ uuid, data = [] }: LoadChartProps) => {
         {/* Process */}
         <Card className={cn}>
           <CardContent className="p-4">
-          {ChartTitle(t("chart.process"), live_data?.process ? live_data.process : null, live_data?.process)}
+          {ChartTitle(t("chart.process"), live_data?.process)}
           <ChartContainer
             config={{
               process: {
@@ -738,9 +720,6 @@ const LoadChart = ({ uuid, data = [] }: LoadChartProps) => {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                      <label className="text-xl font-bold">{`GPU ${index + 1}`}</label>
-                     <div className="scale-75 origin-left">
-                        <CircleChart value={gpu.utilization} label="" color={primaryColor} />
-                     </div>
                   </div>
                   <div className="flex flex-col items-end">
                     <span className="text-sm font-bold">{gpu.name}</span>
