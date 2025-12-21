@@ -357,7 +357,7 @@ const LoadChart = ({ data = [] }: LoadChartProps) => {
           {ChartTitle(
             "Ram",
             calculatePercentage(live_data?.ram?.used, Number(node?.mem_total)),
-            <Flex gap="0" direction="column" align="end" className="text-sm">
+            <div className="flex flex-col items-end gap-0 text-sm">
               <label>
                 {live_data?.ram?.used
                   ? `${formatBytes(live_data.ram.used)} / ${formatBytes(
@@ -372,7 +372,7 @@ const LoadChart = ({ data = [] }: LoadChartProps) => {
                     )}`
                   : "-"}
               </label>
-            </Flex>
+            </div>
           )}
           <ChartContainer
             config={{
@@ -464,9 +464,11 @@ const LoadChart = ({ data = [] }: LoadChartProps) => {
               />
             </AreaChart>
           </ChartContainer>
+          </CardContent>
         </Card>
         {/* Disk */}
         <Card className={cn}>
+          <CardContent className="p-4">
           {ChartTitle(
             "Disk",
             calculatePercentage(live_data?.disk?.used, Number(node?.disk_total)),
@@ -524,13 +526,15 @@ const LoadChart = ({ data = [] }: LoadChartProps) => {
               />
             </AreaChart>
           </ChartContainer>
+          </CardContent>
         </Card>
         {/* Network */}
         <Card className={cn}>
+          <CardContent className="p-4">
           {ChartTitle(
             t("nodeCard.networkSpeed"),
             null,
-            <Flex gap="0" align="end" direction="column" className="text-sm">
+            <div className="flex flex-col items-end gap-0 text-sm">
               <span>
                 ↑ {formatBytes(live_data?.network.up || 0)}
                 /s
@@ -539,7 +543,7 @@ const LoadChart = ({ data = [] }: LoadChartProps) => {
                 ↓ {formatBytes(live_data?.network.down || 0)}
                 /s
               </span>
-            </Flex>
+            </div>
           )}
           <ChartContainer
             config={{
@@ -600,15 +604,18 @@ const LoadChart = ({ data = [] }: LoadChartProps) => {
               />
             </LineChart>
           </ChartContainer>
-        </Card>{/* Connections */}
+          </CardContent>
+        </Card>
+        {/* Connections */}
         <Card className={cn}>
+          <CardContent className="p-4">
           {ChartTitle(
             t("chart.connections"),
             null,
-            <Flex gap="0" align="end" direction="column" className="text-sm">
+            <div className="flex flex-col items-end gap-0 text-sm">
               <span>TCP: {live_data?.connections.tcp}</span>
               <span>UDP: {live_data?.connections.udp}</span>
-            </Flex>
+            </div>
           )}
           <ChartContainer
             config={{
@@ -668,9 +675,11 @@ const LoadChart = ({ data = [] }: LoadChartProps) => {
               />
             </LineChart>
           </ChartContainer>
+          </CardContent>
         </Card>
         {/* Process */}
         <Card className={cn}>
+          <CardContent className="p-4">
           {ChartTitle(t("chart.process"), live_data?.process ? live_data.process : null, live_data?.process)}
           <ChartContainer
             config={{
@@ -719,13 +728,15 @@ const LoadChart = ({ data = [] }: LoadChartProps) => {
               />
             </LineChart>
           </ChartContainer>
+          </CardContent>
         </Card>
         {/* GPU Charts */}
         {live_data?.gpu &&
           live_data.gpu.count > 0 &&
           live_data.gpu.detailed_info?.map((gpu, index) => (
             <Card key={`gpu-${index}`} className={cn}>
-              <Flex direction="column" gap="2" className="mb-2">
+              <CardContent className="p-4">
+              <div className="flex flex-col gap-2 mb-2">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                      <label className="text-xl font-bold">{`GPU ${index + 1}`}</label>
@@ -733,12 +744,12 @@ const LoadChart = ({ data = [] }: LoadChartProps) => {
                         <CircleChart value={gpu.utilization} label="" color={primaryColor} />
                      </div>
                   </div>
-                  <Flex direction="column" align="end">
+                  <div className="flex flex-col items-end">
                     <span className="text-sm font-bold">{gpu.name}</span>
                     <span className="text-xs text-muted-foreground">
                         {formatBytes(gpu.memory_total)}
                     </span>
-                  </Flex>
+                  </div>
                 </div>
                 <div className="grid grid-cols-3 gap-4 text-sm text-muted-foreground">
                   <div className="text-center">
@@ -762,7 +773,7 @@ const LoadChart = ({ data = [] }: LoadChartProps) => {
                     </div>
                   </div>
                 </div>
-              </Flex>
+              </div>
               <ChartContainer
                 config={{
                   gpu_usage: {
@@ -866,9 +877,11 @@ const LoadChart = ({ data = [] }: LoadChartProps) => {
                   />
                 </AreaChart>
               </ChartContainer>
+              </CardContent>
             </Card>
           ))}
-      </div></Flex>
+      </div>
+    </div>
   );
 };
 
