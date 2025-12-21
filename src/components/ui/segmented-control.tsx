@@ -7,15 +7,17 @@ import { cn } from "@/lib/utils"
 const SegmentedControl = React.forwardRef<
   React.ElementRef<typeof TabsPrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof TabsPrimitive.Root>
->(({ className, ...props }, ref) => (
-  <TabsPrimitive.Root
-    ref={ref}
-    className={cn(
-      "inline-flex h-9 items-center justify-center rounded-lg bg-muted p-1 text-muted-foreground",
-      className
-    )}
-    {...props}
-  />
+>(({ className, children, ...props }, ref) => (
+  <TabsPrimitive.Root ref={ref} {...props}>
+    <TabsPrimitive.List
+      className={cn(
+        "inline-flex h-9 items-center justify-center rounded-lg bg-muted p-1 text-muted-foreground",
+        className
+      )}
+    >
+      {children}
+    </TabsPrimitive.List>
+  </TabsPrimitive.Root>
 ))
 SegmentedControl.displayName = "SegmentedControl"
 
