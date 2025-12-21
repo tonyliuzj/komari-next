@@ -2,7 +2,8 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Flex, SegmentedControl, Card, Switch, Button } from "@radix-ui/themes";
+import { Flex, Card, Switch, Button } from "@radix-ui/themes";
+import { SegmentedControl, SegmentedControlItem } from "@/components/ui/segmented-control";
 import { usePublicInfo } from "@/contexts/PublicInfoContext";
 import Loading from "@/components/loading";
 import {
@@ -146,8 +147,7 @@ const PingChart = ({ uuid }: { uuid: string }) => {
         const result = await call<any, RpcResp>("common:getRecords", {
           uuid,
           type: "ping",
-          hours,
-        });
+          hours,});
         const records = result?.records || [];
         records.sort(
           (a, b) => new Date(a.time).getTime() - new Date(b.time).getTime()
@@ -255,7 +255,8 @@ const PingChart = ({ uuid }: { uuid: string }) => {
     if (hours < 24) {
       return date.toLocaleTimeString([], {
         hour: "2-digit",
-        minute: "2-digit",second: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
       });
     }
     return date.toLocaleString([], {
@@ -327,25 +328,24 @@ const PingChart = ({ uuid }: { uuid: string }) => {
     >
       <div className="w-full overflow-x-auto px-2">
         <div className="w-max mx-auto">
-          <SegmentedControl.Root
+          <SegmentedControl
             value={view}
             onValueChange={(newView) => {
-              setView(newView);
-              const selected = avaliableView.find((v) => v.label === newView);
+              setView(newView);const selected = avaliableView.find((v) => v.label === newView);
               if (selected && selected.hours !== undefined) {
                 setHours(selected.hours);
               }
             }}>
             {avaliableView.map((v) => (
-              <SegmentedControl.Item
+              <SegmentedControlItem
                 key={v.label}
                 value={v.label}
                 className="capitalize"
               >
                 {v.label}
-              </SegmentedControl.Item>
+              </SegmentedControlItem>
             ))}
-          </SegmentedControl.Root>
+          </SegmentedControl>
         </div>
       </div>
 
@@ -454,7 +454,8 @@ const PingChart = ({ uuid }: { uuid: string }) => {
                               {Math.round(task.p99)} ms
                             </span>
                           </>
-                        )}{typeof task.loss === "number" && (
+                        )}
+                        {typeof task.loss === "number" && (
                           <>
                             <span className="text-muted-foreground">
                               {t("chart.lossRate")}
@@ -526,8 +527,7 @@ const PingChart = ({ uuid }: { uuid: string }) => {
             <LineChart
               data={chartData}
               accessibilityLayer
-              margin={{ top: 0, right: 16, bottom: 0, left: 16 }}
-            >
+              margin={{ top: 0, right: 16, bottom: 0, left: 16 }}>
               <CartesianGrid vertical={false} />
               <XAxis
                 dataKey="time"
