@@ -117,3 +117,6 @@ This repository is designed to be used as a custom Komari theme.
 Contributions are welcome.  
 If you find issues or have ideas for improvements, feel free to open an issue or submit a pull request.
 
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=tonyliuzj/komari-next&type=date&legend=top-left)](https://www.star-history.com/#tonyliuzj/komari-next&type=date&legend=top-left)
