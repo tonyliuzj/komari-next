@@ -33,6 +33,10 @@ It is built with **Next.js**, **TypeScript**, **Tailwind CSS** and **Shadcn UI**
 
 ## Getting Started
 
+- Simply [download theme file](https://github.com/tonyliuzj/komari-next/releases/latest/download/dist-release.zip) and upload it through Komari's admin dashboard, this would be the recommanded way.
+
+## Dev
+
 Clone this repository and install dependencies:
 
 ```bash
