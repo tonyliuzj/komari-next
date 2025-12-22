@@ -6,6 +6,8 @@ It is built with **Next.js**, **TypeScript**, **Tailwind CSS** and **Shadcn UI**
 > This repository contains only the frontend. You will need a running Komari backend instance for the UI to talk to. Or you can download the theme file and upload it through Komari's admin dashboard, this would be the recommanded way.
 
 ![demo](https://github.com/tonyliuzj/komari-next/blob/main/preview.png?raw=true)
+![colour-theme](https://github.com/tonyliuzj/komari-next/blob/main/images/show-theme.png?raw=true)
+
 
 [Demo](https://probes.top)
 
@@ -18,7 +20,13 @@ It is built with **Next.js**, **TypeScript**, **Tailwind CSS** and **Shadcn UI**
 - Node list and management views
 - Internationalization (i18n) with `react-i18next`
 - Responsive layout and dark mode using Shadcn + Tailwind CSS
-- Theme packaging suitable for Komari’s theme system
+- Theme packaging suitable for Komari's theme system
+- **Extensive Customization Options:**
+  - **6 Color Themes:** Default, Ocean, Sunset, Forest, Midnight, Rose
+  - **4 Card Layouts:** Classic, Modern, Minimal, Detailed - each with unique visual designs and element positioning
+  - **4 Graph Designs:** Circle, Progress Bar, Bar Chart, Minimal - all following the selected color theme
+  - **Customizable Status Cards:** Show/hide individual metrics on the dashboard
+  - All settings persist locally and sync across theme changes
 
 ## Tech Stack
 
