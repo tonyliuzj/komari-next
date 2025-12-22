@@ -5,10 +5,8 @@ It is built with **Next.js**, **TypeScript**, **Tailwind CSS** and **Shadcn UI**
 
 > This repository contains only the frontend. You will need a running Komari backend instance for the UI to talk to. Or you can download the theme file and upload it through Komari's admin dashboard, this would be the recommanded way.
 
-![demo](https://github.com/tonyliuzj/komari-next/blob/main/preview.png?raw=true)
+![dark-theme](https://github.com/tonyliuzj/komari-next/blob/main/images/dark-theme.png?raw=true)
 ![colour-theme](https://github.com/tonyliuzj/komari-next/blob/main/images/show-theme.png?raw=true)
-![dark-light](https://github.com/tonyliuzj/komari-next/blob/main/images/dark-light.png?raw=true)
-
 
 [Demo](https://probes.top)
 
