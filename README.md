@@ -3,7 +3,7 @@
 Komari Web UI is a modern frontend for the Komari monitoring project.  
 It is built with **Next.js**, **TypeScript**, **Tailwind CSS** and **Shadcn UI** and packaged as a static site that can be used as a Komari theme.
 
-> This repository contains only the frontend. You will need a running Komari backend instance for the UI to talk to.
+> This repository contains only the frontend. You will need a running Komari backend instance for the UI to talk to. Or you can download the theme file and upload it through Komari's admin dashboard, this would be the recommanded way.
 
 [Demo](https://probes.top)
 
