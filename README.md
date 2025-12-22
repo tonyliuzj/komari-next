@@ -7,6 +7,7 @@ It is built with **Next.js**, **TypeScript**, **Tailwind CSS** and **Shadcn UI**
 
 ![dark-theme](https://github.com/tonyliuzj/komari-next/blob/main/images/dark-theme.png?raw=true)
 ![colour-theme](https://github.com/tonyliuzj/komari-next/blob/main/images/show-theme.png?raw=true)
+![layout-theme](https://github.com/tonyliuzj/komari-next/blob/main/images/layout-theme.png?raw=true)
 
 [Demo](https://probes.top)
 
