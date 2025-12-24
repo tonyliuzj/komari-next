@@ -164,9 +164,9 @@ const Node = ({ basic, live, online }: NodeProps) => {
                 </div>
               </div>
               <div className="flex items-center text-[11px] text-muted-foreground/80 gap-2 mt-0.5">
-                <span className="flex items-center gap-1.5 bg-muted/50 px-1.5 py-0.5 rounded">
-                  <img src={getOSImage(basic.os)} alt={basic.os} className="w-3 h-3" />
-                  {getOSName(basic.os)}
+                <span className="flex items-center gap-1.5 bg-muted/50 px-1.5 py-0.5 rounded min-w-0">
+                  <img src={getOSImage(basic.os)} alt={basic.os} className="w-3 h-3 flex-shrink-0" />
+                  <span className="truncate">{getOSName(basic.os)}</span>
                 </span>
                 {themeConfig.cardLayout === 'detailed' && (
                   <span className="flex items-center gap-1 px-1.5 py-0.5 bg-primary/10 rounded text-primary">
