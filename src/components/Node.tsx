@@ -133,19 +133,36 @@ const Node = ({ basic, live, online }: NodeProps) => {
       {/* Header: Identity & Status */}
       <CardHeader className={headerStyles[themeConfig.cardLayout] || headerStyles.classic}>
         <div className="flex justify-between items-start">
-          <div className="flex items-center gap-3 overflow-hidden">
+          <div className="flex flex-1 min-w-0 items-center gap-3 overflow-hidden">
             {/* Flag position changes based on layout */}
             {themeConfig.cardLayout !== 'detailed' && (
               <div className="flex-shrink-0">
                 <Flag flag={basic.region} />
               </div>
             )}
-            <div className="flex flex-col min-w-0">
-              <Link href={`/instance/${basic.uuid}`} className="group-hover:text-primary transition-colors">
-                <h3 className={`font-bold truncate pr-2 tracking-tight ${
-                  themeConfig.cardLayout === 'detailed' ? 'text-lg' : 'text-base'
-                }`}>{basic.name}</h3>
-              </Link>
+            <div className="flex flex-col flex-1 min-w-0">
+              <div className="flex flex-row min-w-0 items-center">
+                <Link href={`/instance/${basic.uuid}`} className="group-hover:text-primary transition-colors overflow-hidden flex-1">
+                  <h3 className={`font-bold truncate pr-2 tracking-tight ${
+                    themeConfig.cardLayout === 'detailed' ? 'text-lg' : 'text-base'
+                  }`}>{basic.name}</h3>
+                </Link>
+                <div className="flex items-center gap-1 shrink-0">
+                  {live?.message && <Tips color="#CE282E">{live.message}</Tips>}
+                  <MiniPingChartFloat
+                    uuid={basic.uuid}
+                    hours={24}
+                    trigger={
+                      <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-primary">
+                        <TrendingUp className="h-4 w-4" />
+                      </Button>
+                    }
+                  />
+                  <Badge variant={online ? "default" : "destructive"} className={online ? "bg-green-600 hover:bg-green-700" : ""}>
+                    {online ? t("nodeCard.online") : t("nodeCard.offline")}
+                  </Badge>
+                </div>
+              </div>
               <div className="flex items-center text-[11px] text-muted-foreground/80 gap-2 mt-0.5">
                 <span className="flex items-center gap-1.5 bg-muted/50 px-1.5 py-0.5 rounded">
                   <img src={getOSImage(basic.os)} alt={basic.os} className="w-3 h-3" />
@@ -156,26 +173,10 @@ const Node = ({ basic, live, online }: NodeProps) => {
                     <Flag flag={basic.region} />
                   </span>
                 )}
-                <span className="hidden sm:inline opacity-40">•</span>
-                <span className="hidden sm:inline">{formatUptime(liveData.uptime, t)}</span>
+                <span className="opacity-40">•</span>
+                <span>{formatUptime(liveData.uptime, t)}</span>
               </div>
             </div>
-          </div>
-
-          <div className="flex items-center gap-1 flex-shrink-0">
-             {live?.message && <Tips color="#CE282E">{live.message}</Tips>}
-             <MiniPingChartFloat
-              uuid={basic.uuid}
-              hours={24}
-              trigger={
-                <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-primary">
-                  <TrendingUp className="h-4 w-4" />
-                </Button>
-              }
-            />
-            <Badge variant={online ? "default" : "destructive"} className={online ? "bg-green-600 hover:bg-green-700" : ""}>
-              {online ? t("nodeCard.online") : t("nodeCard.offline")}
-            </Badge>
           </div>
         </div>
       </CardHeader>
