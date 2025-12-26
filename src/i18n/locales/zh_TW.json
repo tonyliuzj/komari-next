@@ -386,6 +386,7 @@
     "totalDownload": "總下載",
     "totalNodes": "共 {{total}} 個伺服器，{{online}} 個在線",
     "totalTraffic": "總流量",
+    "totalTransfer": "總傳輸",
     "totalUpload": "總上傳",
     "uptime": "運行時間",
     "virtualization": "虛擬化"

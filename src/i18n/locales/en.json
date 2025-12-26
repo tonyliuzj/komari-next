@@ -386,6 +386,7 @@
     "totalDownload": "Total Download",
     "totalNodes": "{{total}} servers total, {{online}} online",
     "totalTraffic": "Traffic",
+    "totalTransfer": "Total Transfer",
     "totalUpload": "Total Upload",
     "uptime": "Uptime",
     "virtualization": "Virtualization"

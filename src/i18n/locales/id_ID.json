@@ -386,6 +386,7 @@
     "totalDownload": "Total Unduhan",
     "totalNodes": "Total {{total}} server, {{online}} Hidup",
     "totalTraffic": "Total Lalu Lintas",
+    "totalTransfer": "Total Transfer",
     "totalUpload": "Total Unggahan",
     "uptime": "Waktu Aktif",
     "virtualization": "Virtualisasi"

@@ -386,6 +386,7 @@
     "totalDownload": "総ダウンロード",
     "totalNodes": "合計 {{total}} 台のサーバー、{{online}} 台がオンライン",
     "totalTraffic": "総トラフィック",
+    "totalTransfer": "総転送量",
     "totalUpload": "総アップロード",
     "uptime": "稼働時間",
     "virtualization": "仮想化"

@@ -386,6 +386,7 @@
     "totalDownload": "总下载",
     "totalNodes": "共 {{total}} 个服务器，{{online}} 个在线",
     "totalTraffic": "总流量",
+    "totalTransfer": "总传输",
     "totalUpload": "总上传",
     "uptime": "运行时间",
     "virtualization": "虚拟化"
