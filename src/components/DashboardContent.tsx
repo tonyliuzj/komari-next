@@ -110,7 +110,7 @@ export default function DashboardContent() {
         const data = live_data?.data?.data;
         const online = live_data?.data?.online;
         if (!data || !online) return (
-          <div className="flex flex-col text-xs leading-tight">
+          <div className="flex flex-col">
             <div>↑ 0B</div>
             <div>↓ 0B</div>
           </div>
@@ -128,7 +128,7 @@ export default function DashboardContent() {
           0
         );
         return (
-          <div className="flex flex-col text-xs leading-tight">
+          <div className="flex flex-col">
             <div>↑ {formatBytes(up)}</div>
             <div>↓ {formatBytes(down)}</div>
           </div>
@@ -144,7 +144,7 @@ export default function DashboardContent() {
         const data = live_data?.data?.data;
         const online = live_data?.data?.online;
         if (!data || !online) return (
-          <div className="flex flex-col text-xs leading-tight">
+          <div className="flex flex-col">
             <div>↑ 0 B/s</div>
             <div>↓ 0 B/s</div>
           </div>
@@ -162,7 +162,7 @@ export default function DashboardContent() {
           0
         );
         return (
-          <div className="flex flex-col text-xs leading-tight">
+          <div className="flex flex-col">
             <div>↑ {formatSpeed(up)}</div>
             <div>↓ {formatSpeed(down)}</div>
           </div>
@@ -277,7 +277,7 @@ const TopCard: React.FC<TopCardProps> = ({ title, value, description, icon, layo
                 {title}
               </div>
             </div>
-            <div className="text-base font-bold shrink-0">{value}</div>
+            <div className="text-xs font-bold shrink-0 leading-tight">{value}</div>
           </div>
         </CardContent>
         {/* Desktop: original layout */}
@@ -314,7 +314,7 @@ const TopCard: React.FC<TopCardProps> = ({ title, value, description, icon, layo
                 {title}
               </div>
             </div>
-            <div className="text-base font-bold shrink-0">{value}</div>
+            <div className="text-xs font-bold shrink-0 leading-tight">{value}</div>
           </div>
         </CardContent>
         {/* Desktop: original layout */}
@@ -355,7 +355,7 @@ const TopCard: React.FC<TopCardProps> = ({ title, value, description, icon, layo
                 {title}
               </div>
             </div>
-            <div className="text-base font-black bg-gradient-to-br from-foreground to-foreground/70 bg-clip-text text-transparent shrink-0">
+            <div className="text-xs font-black bg-gradient-to-br from-foreground to-foreground/70 bg-clip-text text-transparent shrink-0 leading-tight">
               {value}
             </div>
           </div>
@@ -394,7 +394,7 @@ const TopCard: React.FC<TopCardProps> = ({ title, value, description, icon, layo
                 {title}
               </div>
             </div>
-            <div className="text-base font-extrabold shrink-0">{value}</div>
+            <div className="text-xs font-extrabold shrink-0 leading-tight">{value}</div>
           </div>
         </CardContent>
         {/* Desktop: original layout */}
