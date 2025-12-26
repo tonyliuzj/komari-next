@@ -9,9 +9,10 @@ interface CircleChartProps {
   label: string;
   subLabel?: string;
   color?: string; // Optional override
+  compact?: boolean; // Compact mode for table views
 }
 
-export default function CircleChart({ value, label, subLabel, color }: CircleChartProps) {
+export default function CircleChart({ value, label, subLabel, color, compact = false }: CircleChartProps) {
   const { themeConfig } = useTheme();
 
   // Clamp value
@@ -51,6 +52,50 @@ export default function CircleChart({ value, label, subLabel, color }: CircleCha
     },
   ];
 
+  // Compact mode for table views
+  if (compact) {
+    return (
+      <div className="flex items-center justify-center">
+        <div className="h-[80px] w-[80px] relative">
+          <ResponsiveContainer width="100%" height="100%">
+            <RadialBarChart
+              cx="50%"
+              cy="50%"
+              innerRadius="65%"
+              outerRadius="95%"
+              barSize={7}
+              data={data}
+              startAngle={90}
+              endAngle={-270}
+            >
+              <PolarAngleAxis
+                type="number"
+                domain={[0, 100]}
+                angleAxisId={0}
+                tick={false}
+              />
+              <RadialBar
+                background={{ fill: 'rgba(128, 128, 128, 0.1)' }}
+                dataKey="value"
+                cornerRadius={10}
+                animationDuration={800}
+                animationEasing="ease-out"
+              />
+            </RadialBarChart>
+          </ResponsiveContainer>
+
+          {/* Centered Percentage for compact mode */}
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <span className="text-[11px] font-bold text-foreground">
+              {Math.round(chartValue)}%
+            </span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Default mode with labels
   return (
     <div className="flex flex-col items-center justify-center p-2">
       <div className="h-[90px] w-[90px] relative">

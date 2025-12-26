@@ -18,12 +18,14 @@ import type { LiveData, Record } from "../types/LiveData";
 import { formatUptime } from "./Node";
 import { formatBytes } from "@/utils/unitHelper";
 import UsageBar from "./UsageBar";
+import AdaptiveChart from "./AdaptiveChart";
 import Flag from "./Flag";
 import PriceTags from "./PriceTags";
 import Tips from "./ui/tips";
 import { DetailsGrid } from "./DetailsGrid";
 import MiniPingChart from "./MiniPingChart";
 import { getOSImage } from "@/utils";
+import { cn } from "@/lib/utils";
 
 interface NodeTableProps {
   nodes: NodeBasicInfo[];
@@ -61,13 +63,11 @@ const NodeTable: React.FC<NodeTableProps> = ({ nodes, liveData }) => {
       
       setSortState((prev) => {
         if (prev.field === field) {
-          // 循环切换：default -> asc -> desc -> default
           const nextOrder: SortOrder = 
             prev.order === 'default' ? 'asc' : 
             prev.order === 'asc' ? 'desc' : 'default';
           return { field: nextOrder === 'default' ? null : field, order: nextOrder };
         } else {
-          // 新字段，从正序开始
           return { field, order: 'asc' };
         }
       });
@@ -75,11 +75,10 @@ const NodeTable: React.FC<NodeTableProps> = ({ nodes, liveData }) => {
   };
 
   const getSortIcon = (field: SortField) => {
-    if (sortState.field !== field) return null;
+    if (sortState.field !== field) return <div className="w-[14px]" />; // Placeholder to prevent layout shift
     return sortState.order === 'asc' ? <ChevronUp size={14} /> : <ChevronDown size={14} />;
   };
 
-  // 确保liveData是有效的
   const onlineNodes = liveData && liveData.online ? liveData.online : [];
 
   const getNodeData = (uuid: string): Record => {
@@ -96,23 +95,19 @@ const NodeTable: React.FC<NodeTableProps> = ({ nodes, liveData }) => {
       : defaultLive;
   };
 
-  // 排序节点函数
   const sortedNodes = [...nodes].sort((a, b) => {
     const aOnline = onlineNodes.includes(a.uuid);
     const bOnline = onlineNodes.includes(b.uuid);
     const aData = getNodeData(a.uuid);
     const bData = getNodeData(b.uuid);
 
-    // 如果没有排序字段或为默认排序，使用原来的排序逻辑
     if (!sortState.field || sortState.order === 'default') {
-      // 先按在线/离线状态排序，再按权重排序（权重大的靠前）
       if (aOnline !== bOnline) {
         return aOnline ? -1 : 1;
       }
       return a.weight - b.weight;
     }
 
-    // 自定义排序逻辑
     let comparison = 0;
     switch (sortState.field) {
       case 'name':
@@ -122,7 +117,7 @@ const NodeTable: React.FC<NodeTableProps> = ({ nodes, liveData }) => {
         comparison = a.os.localeCompare(b.os);
         break;
       case 'status':
-        comparison = Number(bOnline) - Number(aOnline); // 在线状态：true > false
+        comparison = Number(bOnline) - Number(aOnline);
         break;
       case 'cpu':
         comparison = aData.cpu.usage - bData.cpu.usage;
@@ -160,13 +155,13 @@ const NodeTable: React.FC<NodeTableProps> = ({ nodes, liveData }) => {
   });
 
   return (
-    <div className="mx-4 overflow-x-auto rounded-xl node-table-container">
+    <div className="rounded-xl border bg-card text-card-foreground shadow-sm overflow-hidden mx-4">
       <Table>
         <TableHeader>
-          <TableRow>
-            <TableHead className="w-[24px]"></TableHead>
-            <TableHead 
-              className="w-[200px] min-w-[150px] cursor-pointer hover:bg-accent-2 select-none"
+          <TableRow className="hover:bg-transparent">
+            <TableHead className="w-[40px]"></TableHead>
+            <TableHead
+              className="w-[200px] cursor-pointer hover:bg-muted/50 transition-colors"
               onClick={handleSort('name')}
               title={t("nodeCard.sortTooltip")}
             >
@@ -175,8 +170,8 @@ const NodeTable: React.FC<NodeTableProps> = ({ nodes, liveData }) => {
                 {getSortIcon('name')}
               </Flex>
             </TableHead>
-            <TableHead 
-              className="cursor-pointer hover:bg-accent-2 select-none"
+            <TableHead
+              className="w-[60px] cursor-pointer hover:bg-muted/50 transition-colors"
               onClick={handleSort('os')}
               title={t("nodeCard.sortTooltip")}
             >
@@ -185,8 +180,8 @@ const NodeTable: React.FC<NodeTableProps> = ({ nodes, liveData }) => {
                 {getSortIcon('os')}
               </Flex>
             </TableHead>
-            <TableHead 
-              className="max-w-[128px] cursor-pointer hover:bg-accent-2 select-none"
+            <TableHead
+              className="w-[100px] cursor-pointer hover:bg-muted/50 transition-colors"
               onClick={handleSort('status')}
               title={t("nodeCard.sortTooltip")}
             >
@@ -195,38 +190,38 @@ const NodeTable: React.FC<NodeTableProps> = ({ nodes, liveData }) => {
                 {getSortIcon('status')}
               </Flex>
             </TableHead>
-            <TableHead 
-              className="cursor-pointer hover:bg-accent-2 select-none"
+            <TableHead
+              className="w-[120px] cursor-pointer hover:bg-muted/50 transition-colors text-center"
               onClick={handleSort('cpu')}
               title={t("nodeCard.sortTooltip")}
             >
-              <Flex align="center" gap="1">
+              <Flex align="center" gap="1" justify="center">
                 {t("nodeCard.cpu")}
                 {getSortIcon('cpu')}
               </Flex>
             </TableHead>
-            <TableHead 
-              className="cursor-pointer hover:bg-accent-2 select-none"
+            <TableHead
+              className="w-[120px] cursor-pointer hover:bg-muted/50 transition-colors text-center"
               onClick={handleSort('ram')}
               title={t("nodeCard.sortTooltip")}
             >
-              <Flex align="center" gap="1">
+              <Flex align="center" gap="1" justify="center">
                 {t("nodeCard.ram")}
                 {getSortIcon('ram')}
               </Flex>
             </TableHead>
-            <TableHead 
-              className="cursor-pointer hover:bg-accent-2 select-none"
+            <TableHead
+              className="w-[120px] cursor-pointer hover:bg-muted/50 transition-colors text-center"
               onClick={handleSort('disk')}
               title={t("nodeCard.sortTooltip")}
             >
-              <Flex align="center" gap="1">
+              <Flex align="center" gap="1" justify="center">
                 {t("nodeCard.disk")}
                 {getSortIcon('disk')}
               </Flex>
             </TableHead>
-            <TableHead 
-              className="cursor-pointer hover:bg-accent-2 select-none"
+            <TableHead
+              className="cursor-pointer hover:bg-muted/50 transition-colors"
               onClick={handleSort('price')}
               title={t("nodeCard.sortTooltip")}
             >
@@ -235,44 +230,24 @@ const NodeTable: React.FC<NodeTableProps> = ({ nodes, liveData }) => {
                 {getSortIcon('price')}
               </Flex>
             </TableHead>
-            <TableHead 
-              className="cursor-pointer hover:bg-accent-2 select-none text-center min-w-[80px]"
+            <TableHead
+              className="cursor-pointer hover:bg-muted/50 transition-colors text-right"
               onClick={handleSort('networkUp')}
               title={t("nodeCard.sortTooltip")}
             >
-              <Flex align="center" gap="1" justify="center">
-                {t("nodeCard.networkUploadSpeed")}
+              <Flex align="center" gap="1" justify="end">
+                {t("nodeCard.networkSpeed")}
                 {getSortIcon('networkUp')}
               </Flex>
             </TableHead>
-            <TableHead 
-              className="cursor-pointer hover:bg-accent-2 select-none text-center min-w-[80px]"
-              onClick={handleSort('networkDown')}
-              title={t("nodeCard.sortTooltip")}
-            >
-              <Flex align="center" gap="1" justify="center">
-                {t("nodeCard.networkDownloadSpeed")}
-                {getSortIcon('networkDown')}
-              </Flex>
-            </TableHead>
-            <TableHead 
-              className="cursor-pointer hover:bg-accent-2 select-none text-center min-w-[80px]"
+            <TableHead
+              className="cursor-pointer hover:bg-muted/50 transition-colors text-right"
               onClick={handleSort('totalUp')}
               title={t("nodeCard.sortTooltip")}
             >
-              <Flex align="center" gap="1" justify="center">
-                {t("nodeCard.totalUpload")}
+              <Flex align="center" gap="1" justify="end">
+                {t("nodeCard.totalTransfer")}
                 {getSortIcon('totalUp')}
-              </Flex>
-            </TableHead>
-            <TableHead 
-              className="cursor-pointer hover:bg-accent-2 select-none text-center min-w-[80px]"
-              onClick={handleSort('totalDown')}
-              title={t("nodeCard.sortTooltip")}
-            >
-              <Flex align="center" gap="1" justify="center">
-                {t("nodeCard.totalDownload")}
-                {getSortIcon('totalDown')}
               </Flex>
             </TableHead>
           </TableRow>
@@ -293,95 +268,104 @@ const NodeTable: React.FC<NodeTableProps> = ({ nodes, liveData }) => {
             return (
               <React.Fragment key={node.uuid}>
                 <TableRow
-                  className="hover:bg-accent-2 transition-colors duration-200 table-row-hover"
+                  className={cn(
+                    "cursor-pointer hover:bg-muted/50 transition-colors",
+                    !isOnline && "opacity-60",
+                    isExpanded && "bg-muted/50 border-b-0"
+                  )}
                   onClick={() => toggleRowExpansion(node.uuid)}
                 >
-                  <TableCell>
-                    <div className="flex justify-center items-center">
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className={`expand-button ${
-                          isExpanded ? "expanded" : ""
-                        }`}
-                        aria-label="Expand row"
-                      >
-                        <ChevronRight size={16} />
-                      </Button>
-                    </div>
+                  <TableCell className="py-3 pl-4">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className={cn(
+                        "h-6 w-6 transition-transform duration-200",
+                        isExpanded && "rotate-90"
+                      )}
+                      aria-label="Expand row"
+                    >
+                      <ChevronRight className="h-4 w-4" />
+                    </Button>
                   </TableCell>
-                  <TableCell className="node-name-cell">
-                    <Flex align="center" gap="1">
+                  <TableCell className="py-3">
+                    <Flex align="center" gap="2">
                       <Flag flag={node.region} />
                       <Link
                         href={`/instance/${node.uuid}`}
-                        className="hover:underline"
+                        className="hover:underline focus:outline-none"
                         onClick={(e) => e.stopPropagation()}
                       >
-                        <Flex direction="column" className="gap-0">
-                          <label className="max-w-[150px] font-bold text-lg truncate">
+                        <div className="flex flex-col">
+                          <span className="font-medium text-sm truncate max-w-[150px]">
                             {node.name}
-                          </label>
-                          {isOnline ? (
-                            <label className="-mt-1 text-muted-foreground text-xs">
-                              {formatUptime(nodeData.uptime, t)}
-                            </label>
-                          ) : (
-                            <label className="-mt-1 text-muted-foreground">
-                              -
-                            </label>
-                          )}
-                        </Flex>
+                          </span>
+                          <span className="text-xs text-muted-foreground">
+                            {isOnline ? formatUptime(nodeData.uptime, t) : 'Offline'}
+                          </span>
+                        </div>
                       </Link>
                     </Flex>
                   </TableCell>
 
-                  <TableCell className="w-4">
-                    <img src={getOSImage(node.os)} alt={node.os} className="w-5 h-5 mr-2" />
+                  <TableCell className="py-3">
+                    <div className="flex items-center">
+                      <img src={getOSImage(node.os)} alt={node.os} className="w-5 h-5 opacity-80" />
+                    </div>
                   </TableCell>
 
-                  <TableCell>
-                    <Flex
-                      direction="row"
-                      justify="start"
-                      align="center"
-                      gap="1"
-                    >
-                      <div>
-                        <Badge
-                          
-                          variant="outline"
-                          
-                        >
-                          {isOnline
-                            ? t("nodeCard.online")
-                            : t("nodeCard.offline")}
-                        </Badge>
-                      </div>
+                  <TableCell className="py-3">
+                    <Flex align="center" gap="2">
+                      <Badge
+                        variant="outline"
+                        className={cn(
+                          "font-normal text-xs px-2 py-0.5 border h-6",
+                          isOnline
+                            ? "border-green-500/30 text-green-600 bg-green-500/10 dark:text-green-400 dark:bg-green-500/20"
+                            : "border-red-500/30 text-red-600 bg-red-500/10 dark:text-red-400 dark:bg-red-500/20"
+                        )}
+                      >
+                         <span className={cn("w-1.5 h-1.5 rounded-full mr-1.5", isOnline ? "bg-green-500 animate-pulse" : "bg-red-500")} />
+                        {isOnline ? t("nodeCard.online") : t("nodeCard.offline")}
+                      </Badge>
                       {nodeData.message && (
-                        <Tips color="#CE282E">{nodeData.message}</Tips>
+                        <Tips color="#ef4444">{nodeData.message}</Tips>
                       )}
                     </Flex>
                   </TableCell>
 
-                  <TableCell>
-                    <div className="w-[100px]">
-                      <UsageBar label="" value={nodeData.cpu.usage} compact />
+                  <TableCell className="py-3">
+                    <div className="flex justify-center">
+                      <AdaptiveChart
+                        value={nodeData.cpu.usage}
+                        label={t("nodeCard.cpu")}
+                        compact={true}
+                      />
                     </div>
                   </TableCell>
 
-                  <TableCell>
-                    <div className="w-[100px]">
-                      <UsageBar label="" value={memoryUsagePercent} compact />
+                  <TableCell className="py-3">
+                    <div className="flex justify-center">
+                      <AdaptiveChart
+                        value={memoryUsagePercent}
+                        label={t("nodeCard.ram")}
+                        subLabel={`${formatBytes(nodeData.ram.used)} / ${formatBytes(node.mem_total)}`}
+                        compact={true}
+                      />
                     </div>
                   </TableCell>
 
-                  <TableCell>
-                    <div className="w-[100px]">
-                      <UsageBar label="" value={diskUsagePercent} compact />
+                  <TableCell className="py-3">
+                    <div className="flex justify-center">
+                      <AdaptiveChart
+                        value={diskUsagePercent}
+                        label={t("nodeCard.disk")}
+                        subLabel={`${formatBytes(nodeData.disk.used)} / ${formatBytes(node.disk_total)}`}
+                        compact={true}
+                      />
                     </div>
                   </TableCell>
-                  <TableCell>
+                  <TableCell className="py-3">
                     <PriceTags
                       price={node.price}
                       billing_cycle={node.billing_cycle}
@@ -391,25 +375,28 @@ const NodeTable: React.FC<NodeTableProps> = ({ nodes, liveData }) => {
                       tags={node.tags || ""}
                     />
                   </TableCell>
-                  <TableCell className="text-center min-w-[80px]">
-                    <label>↑{formatBytes(nodeData.network.up)}/s</label>
+                  <TableCell className="py-3 text-right">
+                    <div className="font-mono text-xs tabular-nums space-y-0.5">
+                      <div className="text-blue-600 dark:text-blue-400">
+                        ↑ {formatBytes(nodeData.network.up)}/s
+                      </div>
+                      <div className="text-green-600 dark:text-green-400">
+                        ↓ {formatBytes(nodeData.network.down)}/s
+                      </div>
+                    </div>
                   </TableCell>
-                  <TableCell className="text-center min-w-[80px]">
-                    <label>↓{formatBytes(nodeData.network.down)}/s</label>
-                  </TableCell>
-                  <TableCell className="text-center min-w-[80px]">
-                    <label>↑{formatBytes(nodeData.network.totalUp)}</label>
-                  </TableCell>
-                  <TableCell className="text-center min-w-[80px]">
-                    <label>↓{formatBytes(nodeData.network.totalDown)}</label>
+                  <TableCell className="py-3 text-right">
+                    <div className="font-mono text-xs tabular-nums text-muted-foreground space-y-0.5">
+                      <div>↑ {formatBytes(nodeData.network.totalUp)}</div>
+                      <div>↓ {formatBytes(nodeData.network.totalDown)}</div>
+                    </div>
                   </TableCell>
                 </TableRow>
 
-                {/* 展开的详细信息行 */}
                 {isExpanded && (
-                  <TableRow className="expanded-row">
-                    <TableCell colSpan={12} className="bg-accent-1">
-                      <div className="expand-content">
+                  <TableRow className="bg-muted/30 hover:bg-muted/30">
+                    <TableCell colSpan={10} className="p-0">
+                      <div className="px-4 py-6 md:px-8 md:py-8">
                         <ExpandedNodeDetails node={node} nodeData={nodeData} />
                       </div>
                     </TableCell>
@@ -424,7 +411,6 @@ const NodeTable: React.FC<NodeTableProps> = ({ nodes, liveData }) => {
   );
 };
 
-// 展开的节点详细信息组件
 interface ExpandedNodeDetailsProps {
   node: NodeBasicInfo;
   nodeData: Record;
@@ -432,9 +418,11 @@ interface ExpandedNodeDetailsProps {
 
 const ExpandedNodeDetails: React.FC<ExpandedNodeDetailsProps> = ({ node }) => {
   return (
-    <div className="p-4 space-y-4">
-      <DetailsGrid uuid={node.uuid} />
-      <div>
+    <div className="flex flex-col gap-6">
+      <div className="bg-card rounded-lg p-5 border border-border/60 shadow-sm hover:shadow-md transition-shadow min-w-0">
+        <DetailsGrid uuid={node.uuid} />
+      </div>
+      <div className="bg-card rounded-lg p-5 border border-border/60 shadow-sm hover:shadow-md transition-shadow min-w-0">
         <MiniPingChart hours={24} uuid={node.uuid} />
       </div>
     </div>

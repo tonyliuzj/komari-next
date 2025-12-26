@@ -32,13 +32,13 @@ export const DetailsGrid = ({ uuid, gap, box, align }: DetailsGridProps) => {
   const data = live_data?.data.data[uuid ?? ""];
 
   return (
-    <div className={`grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-${gap ?? "4"} w-full`}>
+    <div className={`grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-${gap ?? "4"} w-full`}>
       {/* CPU */}
       <StatCard
         title="CPU"
         value={`${node?.cpu_name || 'Unknown'}`}
         subValue={`${node?.cpu_cores} Cores`}
-        className="col-span-2 md:col-span-2"
+        className="col-span-2 md:col-span-3 lg:col-span-2"
       />
 
       {/* Architecture */}
@@ -48,7 +48,7 @@ export const DetailsGrid = ({ uuid, gap, box, align }: DetailsGridProps) => {
       <StatCard title={t("nodeCard.virtualization")} value={node?.virtualization || "Unknown"} />
 
       {/* GPU */}
-      <StatCard title="GPU" value={node?.gpu_name || "Unknown"} className="col-span-2 md:col-span-1" />
+      <StatCard title="GPU" value={node?.gpu_name || "Unknown"} className="col-span-2 md:col-span-3 lg:col-span-2" />
 
       {/* OS */}
       <StatCard

@@ -10,9 +10,10 @@ interface AdaptiveChartProps {
   label: string;
   subLabel?: string;
   color?: string;
+  compact?: boolean; // Compact mode for table views
 }
 
-export default function AdaptiveChart({ value, label, subLabel, color }: AdaptiveChartProps) {
+export default function AdaptiveChart({ value, label, subLabel, color, compact = false }: AdaptiveChartProps) {
   const { themeConfig } = useTheme();
   const chartValue = Math.min(Math.max(value, 0), 100);
 
@@ -59,6 +60,15 @@ export default function AdaptiveChart({ value, label, subLabel, color }: Adaptiv
 
   // Minimal Design
   if (themeConfig.graphDesign === 'minimal') {
+    if (compact) {
+      return (
+        <div className="flex items-center justify-center">
+          <div className={`text-sm font-bold ${getColorClass(chartValue)}`}>
+            {Math.round(chartValue)}%
+          </div>
+        </div>
+      );
+    }
     return (
       <div className="flex flex-col items-center justify-center p-2 min-w-[90px]">
         <div className={`text-2xl font-bold ${getColorClass(chartValue)}`}>
@@ -76,6 +86,18 @@ export default function AdaptiveChart({ value, label, subLabel, color }: Adaptiv
 
   // Progress Bar Design
   if (themeConfig.graphDesign === 'progress') {
+    if (compact) {
+      return (
+        <div className="flex items-center justify-center">
+          <div className="w-[50px] space-y-1">
+            <Progress value={chartValue} className="h-1.5" />
+            <div className={`text-[10px] font-bold text-center ${getColorClass(chartValue)}`}>
+              {Math.round(chartValue)}%
+            </div>
+          </div>
+        </div>
+      );
+    }
     return (
       <div className="flex flex-col items-center justify-center p-2 min-w-[90px] space-y-2">
         <div className="text-center">
@@ -96,6 +118,28 @@ export default function AdaptiveChart({ value, label, subLabel, color }: Adaptiv
 
   // Bar Chart Design
   if (themeConfig.graphDesign === 'bar') {
+    if (compact) {
+      return (
+        <div className="flex items-center justify-center">
+          <div className="h-[40px] w-[30px] flex flex-col justify-end items-center">
+            <div className="w-full flex flex-col justify-end items-center h-full relative">
+              <div
+                className={`w-full rounded-t-lg transition-all duration-500 ${getBarColorClass(chartValue)}`}
+                style={{ height: `${chartValue}%` }}
+              />
+              <div className="absolute inset-0 flex items-center justify-center">
+                <span className={`text-[9px] font-bold drop-shadow-lg ${
+                  chartValue >= 30 ? 'text-white' : 'text-foreground'
+                }`}>
+                  {Math.round(chartValue)}%
+                </span>
+              </div>
+            </div>
+            <div className="w-full h-0.5 bg-border mt-0.5" />
+          </div>
+        </div>
+      );
+    }
     return (
       <div className="flex flex-col items-center justify-center p-2 min-w-[90px]">
         <div className="h-[90px] w-[60px] flex flex-col justify-end items-center">
@@ -128,5 +172,5 @@ export default function AdaptiveChart({ value, label, subLabel, color }: Adaptiv
   }
 
   // Default: Circle Design
-  return <CircleChart value={value} label={label} subLabel={subLabel} color={color} />;
+  return <CircleChart value={value} label={label} subLabel={subLabel} color={color} compact={compact} />;
 }
