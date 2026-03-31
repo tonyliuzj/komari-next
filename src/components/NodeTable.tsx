@@ -75,7 +75,7 @@ const NodeTable: React.FC<NodeTableProps> = ({ nodes, liveData }) => {
   };
 
   const getSortIcon = (field: SortField) => {
-    if (sortState.field !== field) return <div className="w-[14px]" />; // Placeholder to prevent layout shift
+    if (sortState.field !== field) return <div className="hidden" />; // Placeholder to prevent layout shift
     return sortState.order === 'asc' ? <ChevronUp size={14} /> : <ChevronDown size={14} />;
   };
 
@@ -154,6 +154,8 @@ const NodeTable: React.FC<NodeTableProps> = ({ nodes, liveData }) => {
     return sortState.order === 'desc' ? -comparison : comparison;
   });
 
+  const showPriceColumn = nodes.some(node => node.price !== 0);
+
   return (
     <div className="rounded-xl border bg-card text-card-foreground shadow-sm overflow-hidden">
       <div className="overflow-x-auto">
@@ -162,7 +164,7 @@ const NodeTable: React.FC<NodeTableProps> = ({ nodes, liveData }) => {
             <TableRow className="hover:bg-transparent">
               <TableHead className="w-[30px] px-2"></TableHead>
               <TableHead
-                className="min-w-[140px] cursor-pointer hover:bg-muted/50 transition-colors text-center px-2"
+                className="w-[264px] cursor-pointer hover:bg-muted/50 transition-colors text-center px-2"
                 onClick={handleSort('name')}
                 title={t("nodeCard.sortTooltip")}
               >
@@ -172,7 +174,7 @@ const NodeTable: React.FC<NodeTableProps> = ({ nodes, liveData }) => {
                 </Flex>
               </TableHead>
               <TableHead
-                className="w-[50px] cursor-pointer hover:bg-muted/50 transition-colors text-center px-2"
+                className="w-[90px] cursor-pointer hover:bg-muted/50 transition-colors text-center px-2"
                 onClick={handleSort('os')}
                 title={t("nodeCard.sortTooltip")}
               >
@@ -221,16 +223,18 @@ const NodeTable: React.FC<NodeTableProps> = ({ nodes, liveData }) => {
                   {getSortIcon('disk')}
                 </Flex>
               </TableHead>
-              <TableHead
-                className="min-w-[100px] cursor-pointer hover:bg-muted/50 transition-colors text-center px-2"
-                onClick={handleSort('price')}
-                title={t("nodeCard.sortTooltip")}
-              >
-                <Flex align="center" gap="1" justify="center" className="whitespace-nowrap">
-                  {t("nodeCard.price")}
-                  {getSortIcon('price')}
-                </Flex>
-              </TableHead>
+              {showPriceColumn &&
+                <TableHead
+                  className="min-w-[100px] cursor-pointer hover:bg-muted/50 transition-colors text-center px-2"
+                  onClick={handleSort('price')}
+                  title={t("nodeCard.sortTooltip")}
+                >
+                  <Flex align="center" gap="1" justify="center" className="whitespace-nowrap">
+                    {t("nodeCard.price")}
+                    {getSortIcon('price')}
+                  </Flex>
+                </TableHead>
+              }
               <TableHead
                 className="min-w-[140px] cursor-pointer hover:bg-muted/50 transition-colors text-center px-2"
                 onClick={handleSort('networkUp')}
@@ -290,15 +294,15 @@ const NodeTable: React.FC<NodeTableProps> = ({ nodes, liveData }) => {
                     </Button>
                   </TableCell>
                   <TableCell className="py-2 px-2">
-                    <div className="flex items-center justify-center gap-2">
+                    <div className="flex items-center justify-start gap-2">
                       <Flag flag={node.region} />
                       <Link
                         href={`/instance/${node.uuid}`}
                         className="hover:underline focus:outline-none"
                         onClick={(e) => e.stopPropagation()}
                       >
-                        <div className="flex flex-col items-center">
-                          <span className="font-medium text-sm truncate max-w-[120px]">
+                        <div className="flex flex-col">
+                          <span className="font-medium text-sm truncate max-w-[200px]">
                             {node.name}
                           </span>
                           <span className="text-xs text-muted-foreground">
@@ -366,18 +370,20 @@ const NodeTable: React.FC<NodeTableProps> = ({ nodes, liveData }) => {
                       />
                     </div>
                   </TableCell>
-                  <TableCell className="py-2 px-2">
-                    <div className="flex items-center justify-center">
-                      <PriceTags
-                        price={node.price}
-                        billing_cycle={node.billing_cycle}
-                        expired_at={node.expired_at}
-                        currency={node.currency}
-                        gap="1"
-                        tags={node.tags || ""}
-                      />
-                    </div>
-                  </TableCell>
+                  {showPriceColumn &&
+                    <TableCell className="py-2 px-2">
+                      <div className="flex items-center justify-center">
+                        <PriceTags
+                          price={node.price}
+                          billing_cycle={node.billing_cycle}
+                          expired_at={node.expired_at}
+                          currency={node.currency}
+                          gap="1"
+                          tags={node.tags || ""}
+                        />
+                      </div>
+                    </TableCell>
+                  }
                   <TableCell className="py-2 px-2 text-center">
                     <div className="font-mono text-xs tabular-nums flex items-center justify-center gap-1 whitespace-nowrap">
                       <span className="text-blue-600 dark:text-blue-400">
