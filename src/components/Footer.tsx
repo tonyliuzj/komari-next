@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRPC2Call } from '@/contexts/RPC2Context';
 import { Github, Heart, Server } from 'lucide-react';
+import themeMetadata from '../../komari-theme.json';
 
 const Footer = () => {
   const formatBuildTime = (isoString: string) => {
@@ -87,6 +88,10 @@ const Footer = () => {
                   <div className="flex items-center gap-2">
                     <span className="font-medium text-foreground">Version:</span>
                     <span className="font-mono">{versionInfo.version}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="font-medium text-foreground">Theme:</span>
+                    <span className="font-mono">{themeMetadata.version}</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="font-medium text-foreground">Commit:</span>
