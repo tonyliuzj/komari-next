@@ -2,6 +2,7 @@ import React, { useState, useMemo, useRef, useEffect, Suspense } from "react";
 import { Search, Grid3X3, Table2, X } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
+import { useNodeViewMode } from "@/hooks/useNodeViewMode";
 import type { NodeBasicInfo } from "@/contexts/NodeListContext";
 import type { LiveData } from "../types/LiveData";
 import { NodeGrid } from "./Node";
@@ -14,8 +15,6 @@ import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 
-export type ViewMode = "grid" | "table";
-
 interface NodeDisplayProps {
   nodes: NodeBasicInfo[];
   liveData: LiveData;
@@ -23,10 +22,7 @@ interface NodeDisplayProps {
 
 const NodeDisplay: React.FC<NodeDisplayProps> = ({ nodes, liveData }) => {
   const [t] = useTranslation();
-  const [viewMode, setViewMode] = useLocalStorage<ViewMode>(
-    "nodeViewMode",
-    "grid"
-  );
+  const [viewMode, setViewMode] = useNodeViewMode();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedGroup, setSelectedGroup] = useLocalStorage<string>(
     "nodeSelectedGroup",
@@ -145,7 +141,9 @@ const NodeDisplay: React.FC<NodeDisplayProps> = ({ nodes, liveData }) => {
               onClick={() => setViewMode("grid")}
             >
               <Grid3X3 className="h-4 w-4" />
-              <span className="hidden sm:inline">Grid</span>
+              <span className="hidden sm:inline">
+                {t("nodeDisplay.grid", { defaultValue: "Grid" })}
+              </span>
             </Button>
             <Button
               variant={viewMode === "table" ? "secondary" : "ghost"}
@@ -154,7 +152,9 @@ const NodeDisplay: React.FC<NodeDisplayProps> = ({ nodes, liveData }) => {
               onClick={() => setViewMode("table")}
             >
               <Table2 className="h-4 w-4" />
-              <span className="hidden sm:inline">Table</span>
+              <span className="hidden sm:inline">
+                {t("nodeDisplay.table", { defaultValue: "Table" })}
+              </span>
             </Button>
           </div>
         </div>

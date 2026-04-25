@@ -15,9 +15,13 @@ import Link from "next/link";
 import { ChevronRight, ChevronUp, ChevronDown } from "lucide-react";
 import type { NodeBasicInfo } from "@/contexts/NodeListContext";
 import type { LiveData, Record } from "../types/LiveData";
-import { formatUptime } from "./Node";
+import {
+  formatTrafficPercentage,
+  formatUptime,
+  getTrafficPercentage,
+  getTrafficUsed,
+} from "./Node";
 import { formatBytes } from "@/utils/unitHelper";
-import UsageBar from "./UsageBar";
 import AdaptiveChart from "./AdaptiveChart";
 import Flag from "./Flag";
 import PriceTags from "./PriceTags";
@@ -160,7 +164,7 @@ const NodeTable: React.FC<NodeTableProps> = ({ nodes, liveData }) => {
   return (
     <div className="rounded-xl border bg-card text-card-foreground shadow-sm overflow-hidden">
       <div className="overflow-x-auto">
-        <Table className="w-full min-w-[1094px] table-fixed">
+        <Table className={cn("w-full table-fixed", showPriceColumn ? "min-w-[1240px]" : "min-w-[1084px]")}>
           <TableHeader>
             <TableRow className="hover:bg-transparent">
               <TableHead className="w-[30px] px-2"></TableHead>
@@ -226,7 +230,7 @@ const NodeTable: React.FC<NodeTableProps> = ({ nodes, liveData }) => {
               </TableHead>
               {showPriceColumn &&
                 <TableHead
-                  className="w-[100px] cursor-pointer hover:bg-muted/50 transition-colors text-center px-2"
+                  className="w-[156px] cursor-pointer hover:bg-muted/50 transition-colors text-center px-2"
                   onClick={handleSort('price')}
                   title={t("nodeCard.sortTooltip")}
                 >
@@ -247,7 +251,7 @@ const NodeTable: React.FC<NodeTableProps> = ({ nodes, liveData }) => {
                 </Flex>
               </TableHead>
               <TableHead
-                className="w-[140px] cursor-pointer hover:bg-muted/50 transition-colors text-center px-2"
+                className="w-[200px] cursor-pointer hover:bg-muted/50 transition-colors text-center px-2"
                 onClick={handleSort('totalUp')}
                 title={t("nodeCard.sortTooltip")}
               >
@@ -269,6 +273,21 @@ const NodeTable: React.FC<NodeTableProps> = ({ nodes, liveData }) => {
               : 0;
             const diskUsagePercent = node.disk_total
               ? (nodeData.disk.used / node.disk_total) * 100
+              : 0;
+            const trafficLimitType = node.traffic_limit_type ?? "sum";
+            const trafficUsed = getTrafficUsed(
+              nodeData.network.totalUp,
+              nodeData.network.totalDown,
+              trafficLimitType
+            );
+            const trafficPercentage = getTrafficPercentage(
+              nodeData.network.totalUp,
+              nodeData.network.totalDown,
+              node.traffic_limit,
+              trafficLimitType
+            );
+            const trafficBarWidth = Number.isFinite(trafficPercentage)
+              ? Math.min(Math.max(trafficPercentage, 0), 100)
               : 0;
 
             return (
@@ -372,8 +391,8 @@ const NodeTable: React.FC<NodeTableProps> = ({ nodes, liveData }) => {
                     </div>
                   </TableCell>
                   {showPriceColumn &&
-                    <TableCell className="py-2 px-2">
-                      <div className="flex items-center justify-center">
+                    <TableCell className="py-2 px-1.5">
+                      <div className="flex min-w-0 items-center justify-center">
                         <PriceTags
                           price={node.price}
                           billing_cycle={node.billing_cycle}
@@ -381,6 +400,9 @@ const NodeTable: React.FC<NodeTableProps> = ({ nodes, liveData }) => {
                           currency={node.currency}
                           gap="1"
                           tags={node.tags || ""}
+                          compact
+                          maxCustomTags={3}
+                          className="max-w-[148px] justify-center"
                         />
                       </div>
                     </TableCell>
@@ -397,10 +419,30 @@ const NodeTable: React.FC<NodeTableProps> = ({ nodes, liveData }) => {
                     </div>
                   </TableCell>
                   <TableCell className="py-2 px-2 text-center">
-                    <div className="font-mono text-xs tabular-nums text-muted-foreground flex items-center justify-center gap-1 whitespace-nowrap">
-                      <span>↑{formatBytes(nodeData.network.totalUp)}</span>
-                      <span>/</span>
-                      <span>↓{formatBytes(nodeData.network.totalDown)}</span>
+                    <div className="space-y-1.5">
+                      {node.traffic_limit > 0 ? (
+                        <div className="mx-auto w-full max-w-[184px] space-y-1">
+                          <div className="flex items-center justify-between gap-2 text-[10px] leading-none text-muted-foreground">
+                            <span className="shrink-0">{trafficLimitType.toUpperCase()} Limit</span>
+                            <span className="shrink-0 font-mono tabular-nums">
+                              {formatTrafficPercentage(trafficPercentage)}
+                            </span>
+                          </div>
+                          <div className="h-1 w-full overflow-hidden rounded-full bg-secondary">
+                            <div
+                              className="h-full rounded-full bg-primary/70 transition-[width] duration-500"
+                              style={{ width: `${trafficBarWidth}%` }}
+                            />
+                          </div>
+                          <div className="truncate text-[10px] leading-none text-muted-foreground">
+                            {formatBytes(trafficUsed)} / {formatBytes(node.traffic_limit)}
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="font-mono text-xs tabular-nums text-muted-foreground whitespace-nowrap">
+                          {formatBytes(nodeData.network.totalUp + nodeData.network.totalDown)}
+                        </div>
+                      )}
                     </div>
                   </TableCell>
                 </TableRow>

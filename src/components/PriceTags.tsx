@@ -1,6 +1,40 @@
-import { Badge } from "@/components/ui/badge";
+import { Badge, type BadgeColor } from "@/components/ui/badge";
 import { Flex } from "@/components/ui/flex";
+import { cn } from "@/lib/utils";
 import { useTranslation } from "react-i18next";
+
+const tagColors: BadgeColor[] = [
+  "ruby",
+  "gray",
+  "gold",
+  "bronze",
+  "brown",
+  "yellow",
+  "amber",
+  "orange",
+  "tomato",
+  "red",
+  "crimson",
+  "pink",
+  "plum",
+  "purple",
+  "violet",
+  "iris",
+  "indigo",
+  "blue",
+  "cyan",
+  "teal",
+  "jade",
+  "green",
+  "grass",
+  "lime",
+  "mint",
+  "sky",
+];
+
+function isBadgeColor(color: string): color is BadgeColor {
+  return tagColors.includes(color as BadgeColor);
+}
 
 const PriceTags = ({
   price = 0,
@@ -10,6 +44,11 @@ const PriceTags = ({
   tags = "",
   ip4 = "",
   ip6 = "",
+  compact = false,
+  maxCustomTags = compact ? 3 : undefined,
+  className,
+  gap = "1",
+  wrap = "wrap",
   ...props
 }: {
   expired_at?: string | number;
@@ -19,21 +58,42 @@ const PriceTags = ({
   tags?: string;
   ip4?: any;
   ip6?: any;
+  compact?: boolean;
+  maxCustomTags?: number;
 } & React.ComponentProps<typeof Flex>) => {
+  const [t] = useTranslation();
+  const badgeClassName = cn(
+    "text-sm",
+    compact &&
+      "h-5 min-w-0 max-w-[5.5rem] shrink-0 px-1.5 py-0 text-[10px] leading-none"
+  );
+  const labelClassName = cn(
+    "text-xs",
+    compact && "block min-w-0 truncate text-[10px] leading-none"
+  );
+  const containerClassName = cn(
+    compact && "min-w-0 max-w-full content-center gap-y-1",
+    className
+  );
+
   if (price == 0) {
     return (
-      <Flex gap="1" {...props} wrap="wrap">
-        <CustomTags tags={tags} />
+      <Flex {...props} gap={gap} wrap={wrap} className={containerClassName}>
+        <CustomTags tags={tags} compact={compact} maxVisible={maxCustomTags} />
       </Flex>
     );
   }
-  const [t] = useTranslation();
 
   return (
-    <Flex gap="1" {...props} wrap="wrap">
+    <Flex {...props} gap={gap} wrap={wrap} className={containerClassName}>
       {ip4 && (
-        <Badge  variant="outline" className="text-sm" >
-          <label className="flex justify-center items-center gap-1 text-xs">
+        <Badge variant="outline" className={badgeClassName}>
+          <label
+            className={cn(
+              "flex justify-center items-center gap-1 text-xs",
+              compact && "text-[10px] leading-none"
+            )}
+          >
             <div className="border-2 rounded-4xl border-green-500"></div>
             V4
           </label>
@@ -41,16 +101,21 @@ const PriceTags = ({
       )}
 
       {ip6 && (
-        <Badge  variant="outline" className="text-sm" >
-          <label className="flex justify-center items-center gap-1 text-xs">
+        <Badge variant="outline" className={badgeClassName}>
+          <label
+            className={cn(
+              "flex justify-center items-center gap-1 text-xs",
+              compact && "text-[10px] leading-none"
+            )}
+          >
             <div className="border-2 rounded-4xl border-green-500"></div>
             V6
           </label>
         </Badge>
       )}
 
-      <Badge color="iris"  variant="outline" className="text-sm">
-        <label className="text-xs">
+      <Badge color="iris" variant="outline" className={badgeClassName}>
+        <label className={labelClassName}>
           {price == -1 ? t("common.free") : `${currency}${price}`}/
           {(() => {
             if (billing_cycle >= 27 && billing_cycle <= 32) {
@@ -90,11 +155,10 @@ const PriceTags = ({
             return "green";
           }
         })()}
-        
         variant="outline"
-        className="text-sm"
+        className={badgeClassName}
       >
-        <label className="text-xs">
+        <label className={labelClassName}>
           {(() => {
             const expiredDate = new Date(expired_at);
             const now = new Date();
@@ -114,103 +178,87 @@ const PriceTags = ({
           })()}
         </label>
       </Badge>
-      <CustomTags tags={tags} />
+      <CustomTags tags={tags} compact={compact} maxVisible={maxCustomTags} />
     </Flex>
   );
 };
 
-const CustomTags = ({ tags }: { tags?: string }) => {
+const CustomTags = ({
+  tags,
+  compact = false,
+  maxVisible,
+}: {
+  tags?: string;
+  compact?: boolean;
+  maxVisible?: number;
+}) => {
   if (!tags || tags.trim() === "") {
     return <></>;
   }
-  const tagList = tags.split(";").filter((tag) => tag.trim() !== "");
-  const colors: Array<
-    | "ruby"
-    | "gray"
-    | "gold"
-    | "bronze"
-    | "brown"
-    | "yellow"
-    | "amber"
-    | "orange"
-    | "tomato"
-    | "red"
-    | "crimson"
-    | "pink"
-    | "plum"
-    | "purple"
-    | "violet"
-    | "iris"
-    | "indigo"
-    | "blue"
-    | "cyan"
-    | "teal"
-    | "jade"
-    | "green"
-    | "grass"
-    | "lime"
-    | "mint"
-    | "sky"
-  > = [
-    "ruby",
-    "gray",
-    "gold",
-    "bronze",
-    "brown",
-    "yellow",
-    "amber",
-    "orange",
-    "tomato",
-    "red",
-    "crimson",
-    "pink",
-    "plum",
-    "purple",
-    "violet",
-    "iris",
-    "indigo",
-    "blue",
-    "cyan",
-    "teal",
-    "jade",
-    "green",
-    "grass",
-    "lime",
-    "mint",
-    "sky",
-  ];
+  const tagList = tags.split(";").map((tag) => tag.trim()).filter(Boolean);
 
   // 解析带颜色的标签
   const parseTagWithColor = (tag: string) => {
     const colorMatch = tag.match(/<(\w+)>$/);
     if (colorMatch) {
       const color = colorMatch[1].toLowerCase();
-      const text = tag.replace(/<\w+>$/, "");
+      const text = tag.replace(/<\w+>$/, "").trim();
       // 检查颜色是否在支持的颜色列表中
-      if (colors.includes(color as any)) {
-        return { text, color: color as (typeof colors)[number] };
+      if (isBadgeColor(color)) {
+        return { text, color };
       }
     }
     return { text: tag, color: null };
   };
+  const parsedTags = tagList.map(parseTagWithColor);
+  const visibleTags =
+    compact && maxVisible ? parsedTags.slice(0, maxVisible) : parsedTags;
+  const hiddenCount = parsedTags.length - visibleTags.length;
+  const hiddenTitle =
+    hiddenCount > 0
+      ? parsedTags
+          .slice(visibleTags.length)
+          .map(({ text }) => text)
+          .join(", ")
+      : undefined;
 
   return (
     <>
-      {tagList.map((tag, index) => {
-        const { text, color } = parseTagWithColor(tag);
-        const badgeColor = color || colors[index % colors.length];
+      {visibleTags.map(({ text, color }, index) => {
+        const badgeColor = color || tagColors[index % tagColors.length];
 
         return (
           <Badge
             key={index}
             color={badgeColor}
             variant="outline"
-            className="text-sm"
+            className={cn(
+              "text-sm",
+              compact &&
+                "h-5 min-w-0 max-w-[4.75rem] shrink px-1.5 py-0 text-[10px] leading-none"
+            )}
+            title={text}
           >
-            <label className="text-xs">{text}</label>
+            <label
+              className={cn(
+                "text-xs",
+                compact && "block min-w-0 truncate text-[10px] leading-none"
+              )}
+            >
+              {text}
+            </label>
           </Badge>
         );
       })}
+      {hiddenCount > 0 && (
+        <Badge
+          variant="outline"
+          className="h-5 shrink-0 border-muted-foreground/25 bg-muted/50 px-1.5 py-0 text-[10px] leading-none text-muted-foreground"
+          title={hiddenTitle}
+        >
+          <label className="text-[10px] leading-none">+{hiddenCount}</label>
+        </Badge>
+      )}
     </>
   );
 };

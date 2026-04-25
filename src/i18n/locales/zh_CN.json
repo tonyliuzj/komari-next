@@ -243,6 +243,7 @@
     "confirm": "确认",
     "confirm_delete": "确认删除",
     "content": "内容",
+    "dashboard": "仪表盘",
     "day": "天",
     "delete": "删除",
     "deleted_successfully": "已删除",
@@ -263,6 +264,7 @@
     "help": "帮助",
     "home": "主页",
     "long_term": "长期",
+    "map": "地图",
     "monthly": "月",
     "name": "名称",
     "none": "无",
@@ -336,16 +338,50 @@
   },
   "login": {
     "desc": "登录到 Komari 控制面板。",
+    "failed": "Login failed.",
+    "logging_in": "Logging in...",
     "login_with": "使用 {{provider}} 登录",
     "login_with_github": "使用 GitHub 登录",
+    "network_error": "Network error.",
     "password": "密码",
     "password_placeholder": "请输入您的密码",
+    "required": "Username and password are required.",
     "title": "登录",
     "two_factor": "双因素认证",
     "username": "用户名"
   },
   "logs": {
     "title": "日志"
+  },
+  "mapView": {
+    "activeCountries": "{{count}} 个活跃国家 / 地区",
+    "ariaLabel": "全球节点分布地图",
+    "countrySummary": "{{name}}：{{total}} 台节点，{{online}} 台在线，{{offline}} 台离线",
+    "emptySelectionDescription": "这些节点仍会正常参与统计，只是地区值暂时还没有命中地图映射。先看左侧“未显示地区”列表，就能知道具体是哪一项需要补充。",
+    "emptySelectionTitle": "当前没有可显示的地区",
+    "legend": {
+      "offline": "全部离线",
+      "online": "全部在线",
+      "partial": "部分在线"
+    },
+    "offline": "{{count}} 台离线",
+    "online": "{{count}} 台在线",
+    "regionNodes": "该地区共 {{count}} 台节点",
+    "regionUnknown": "未填写",
+    "servers": "{{count}} 台节点",
+    "stats": {
+      "nodes": "节点数"
+    },
+    "status": {
+      "offline": "离线",
+      "online": "在线",
+      "partial": "部分在线"
+    },
+    "title": "全球分布",
+    "unclassified": "暂未分类",
+    "unmappedCount": "共 {{count}} 项",
+    "unmappedRegions": "未显示地区",
+    "viewDetails": "查看 {{name}} 详情"
   },
   "network_speed": "网络速率",
   "nodeCard": {
@@ -391,8 +427,15 @@
     "uptime": "运行时间",
     "virtualization": "虚拟化"
   },
+  "nodeDisplay": {
+    "defaultView": "默认视图",
+    "grid": "网格",
+    "remainingValueCalculator": "剩余价值计算器",
+    "table": "表格"
+  },
   "nodes": {
-    "empty": "暂无服务器数据"
+    "empty": "暂无服务器数据",
+    "loading": "正在加载节点..."
   },
   "notification": {
     "load": {
@@ -446,6 +489,64 @@
     "yes": "是的"
   },
   "region_overview": "点亮地区",
+  "remainingValue": {
+    "billingCycle": {
+      "days": "{{count}} 天",
+      "once": "一次性"
+    },
+    "card": {
+      "expiredValue": "剩余价值 0",
+      "originalPrice": "原价 {{amount}} / {{cycle}}",
+      "originalValue": "原币种价值 {{amount}}",
+      "remainingTime": "剩余时间 {{value}}",
+      "skipReason": "未纳入原因"
+    },
+    "description": "查看节点剩余价值与汇率换算结果。",
+    "empty": {
+      "active": "当前没有可计算的节点",
+      "expired": "暂无已过期节点",
+      "none": "当前没有可展示的节点",
+      "skipped": "当前没有未纳入的节点"
+    },
+    "errorRatesUnavailable": "暂时无法获取汇率",
+    "filter": {
+      "active": "可计算 {{count}}",
+      "all": "全部 {{count}}",
+      "expired": "已过期 {{count}}",
+      "skipped": "未纳入 {{count}}"
+    },
+    "monthlyCost": "月成本",
+    "placeholderPending": "暂未换算",
+    "rateProvider": "在线汇率由 Frankfurter 提供，仅会在你打开计算器后发起查询。",
+    "rateStatus": {
+      "loading": "等待获取汇率",
+      "stale": "汇率非最新",
+      "updatedAt": "汇率更新时间 {{value}}"
+    },
+    "refreshRates": "刷新汇率",
+    "remainingTime": {
+      "longTerm": "长期",
+      "oneTime": "一次性",
+      "value": "{{days}} 天 {{hours}} 小时"
+    },
+    "section": {
+      "active": "可计算节点",
+      "expired": "已过期节点",
+      "skipped": "未纳入节点"
+    },
+    "skipReason": {
+      "default": "信息不完整",
+      "invalid_expired_at": "到期时间格式无效",
+      "missing_currency": "未填写币种",
+      "missing_expired_at": "未填写到期时间",
+      "missing_price": "未填写价格",
+      "unsupported_billing_cycle": "未填写周期",
+      "unsupported_currency": "币种暂不支持"
+    },
+    "title": "剩余价值计算器",
+    "total": "全部剩余价值",
+    "totalValue": "总价值"
+  },
   "save": "保存",
   "search": {
     "no_results": "未找到匹配的服务器",
@@ -683,6 +784,7 @@
     "theme_link": "社区维护的主题",
     "theme_url": "主题URL",
     "title": "主题管理",
+    "toggle": "切换主题",
     "update": "更新主题",
     "update_description": "如果原主题URL无法访问，请上传主题包进行更新。",
     "update_failed": "主题更新失败",
@@ -703,6 +805,82 @@
     "uploda_413_content_too_large": "文件上传失败 (413)。请检查并增大您的反向代理服务器（如 Nginx/CDN）配置中的文件大小限制（client_max_body_size），确保该值大于您的目标文件大小。",
     "version": "版本",
     "zip_files_only": "仅支持 .zip 格式"
+  },
+  "themeCustomizer": {
+    "apply": "应用",
+    "backgroundImage": "背景图片",
+    "backgroundImagePlaceholder": "输入图片 URL",
+    "cardDesign": "卡片设计",
+    "cardDesigns": {
+      "default": {
+        "description": "文本延迟统计",
+        "label": "默认"
+      },
+      "qualityBars": {
+        "description": "延迟与丢包历史块",
+        "label": "历史块"
+      }
+    },
+    "cardLayout": "卡片布局",
+    "cardLayouts": {
+      "classic": {
+        "description": "传统卡片设计",
+        "label": "经典"
+      },
+      "detailed": {
+        "description": "顶部图标居中",
+        "label": "详细"
+      },
+      "minimal": {
+        "description": "无边框清爽样式",
+        "label": "极简"
+      },
+      "modern": {
+        "description": "图标左置横向布局",
+        "label": "现代"
+      }
+    },
+    "clear": "清除",
+    "colorTheme": "颜色主题",
+    "colorThemes": {
+      "default": "默认",
+      "forest": "森林",
+      "midnight": "午夜",
+      "ocean": "海洋",
+      "rose": "玫瑰",
+      "sunset": "日落"
+    },
+    "graphDesign": "图表设计",
+    "graphDesigns": {
+      "bar": {
+        "description": "竖向柱状",
+        "label": "柱状图"
+      },
+      "circle": {
+        "description": "圆形进度",
+        "label": "圆环"
+      },
+      "minimal": {
+        "description": "简单文本",
+        "label": "极简"
+      },
+      "progress": {
+        "description": "线性进度",
+        "label": "进度条"
+      }
+    },
+    "statusDesign": "状态设计",
+    "statusDesigns": {
+      "default": {
+        "description": "标准状态卡片数值",
+        "label": "默认"
+      },
+      "speed": {
+        "description": "上传与下载速度仪表指示",
+        "label": "速度仪表"
+      }
+    },
+    "themeSettings": "主题设置"
   },
   "time": {
     "ago": "前",
