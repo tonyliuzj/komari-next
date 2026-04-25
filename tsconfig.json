@@ -39,6 +39,7 @@
   ],
   "exclude": [
     "node_modules",
+    "temp",
     "src/components/admin"
   ]
 }

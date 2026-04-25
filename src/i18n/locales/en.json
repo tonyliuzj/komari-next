@@ -243,6 +243,7 @@
     "confirm": "Confirm",
     "confirm_delete": "Confirm delete",
     "content": "Content",
+    "dashboard": "Dashboard",
     "day": "Day",
     "delete": "Delete",
     "deleted_successfully": "Deleted",
@@ -288,7 +289,8 @@
     "update": "Update",
     "update_available": "New version available",
     "updated_successfully": "Updated successfully",
-    "weight": "Weight"
+    "weight": "Weight",
+    "map": "Map"
   },
   "copy": "Copy",
   "copy_success": "Copied!",
@@ -342,7 +344,11 @@
     "password_placeholder": "Enter your password",
     "title": "Login",
     "two_factor": "Two-Factor Authentication",
-    "username": "Username"
+    "username": "Username",
+    "required": "Username and password are required.",
+    "failed": "Login failed.",
+    "network_error": "Network error.",
+    "logging_in": "Logging in..."
   },
   "logs": {
     "title": "Logs"
@@ -392,7 +398,8 @@
     "virtualization": "Virtualization"
   },
   "nodes": {
-    "empty": "No server data available"
+    "empty": "No server data available",
+    "loading": "Loading nodes..."
   },
   "notification": {
     "load": {
@@ -644,6 +651,82 @@
     "title": "Settings"
   },
   "status_settings": "Status Settings",
+  "themeCustomizer": {
+    "themeSettings": "Theme settings",
+    "colorTheme": "Color Theme",
+    "cardLayout": "Card Layout",
+    "cardDesign": "Card Design",
+    "statusDesign": "Status Design",
+    "graphDesign": "Graph Design",
+    "backgroundImage": "Background Image",
+    "backgroundImagePlaceholder": "Enter image URL",
+    "apply": "Apply",
+    "clear": "Clear",
+    "colorThemes": {
+      "default": "Default",
+      "ocean": "Ocean",
+      "sunset": "Sunset",
+      "forest": "Forest",
+      "midnight": "Midnight",
+      "rose": "Rose"
+    },
+    "cardLayouts": {
+      "classic": {
+        "label": "Classic",
+        "description": "Traditional card design"
+      },
+      "modern": {
+        "label": "Modern",
+        "description": "Icon left, horizontal"
+      },
+      "minimal": {
+        "label": "Minimal",
+        "description": "Borderless, clean"
+      },
+      "detailed": {
+        "label": "Detailed",
+        "description": "Icon top, centered"
+      }
+    },
+    "cardDesigns": {
+      "default": {
+        "label": "Default",
+        "description": "Text ping statistics"
+      },
+      "qualityBars": {
+        "label": "History Bars",
+        "description": "Latency and packet loss block history"
+      }
+    },
+    "statusDesigns": {
+      "default": {
+        "label": "Default",
+        "description": "Standard status card values"
+      },
+      "speed": {
+        "label": "Speed Gauge",
+        "description": "Gauge indicator for upload and download speed"
+      }
+    },
+    "graphDesigns": {
+      "circle": {
+        "label": "Circle",
+        "description": "Circular progress"
+      },
+      "progress": {
+        "label": "Progress Bar",
+        "description": "Linear progress"
+      },
+      "bar": {
+        "label": "Bar Chart",
+        "description": "Vertical bars"
+      },
+      "minimal": {
+        "label": "Minimal",
+        "description": "Simple text"
+      }
+    }
+  },
   "terminal": {
     "disconnect": "Disconnected",
     "no_active_connection": "No active connection",
@@ -683,6 +766,7 @@
     "theme_link": "Community Maintained Themes",
     "theme_url": "Theme URL",
     "title": "Theme Management",
+    "toggle": "Toggle theme",
     "update": "Update Theme",
     "update_description": "If the original theme URL is inaccessible, please upload the theme package to update it.",
     "update_failed": "Theme update failed",
@@ -714,5 +798,99 @@
     "mode": "View Mode"
   },
   "warn_https": "The current connection is not HTTPS! Your sensitive data is at serious risk. Take immediate action to secure the connection! Copy may not available!",
-  "warn_websocket": "RPC2 request failed, please check the network connection or server status!"
+  "warn_websocket": "RPC2 request failed, please check the network connection or server status!",
+  "mapView": {
+    "title": "Global Distribution",
+    "servers": "{{count}} servers",
+    "online": "{{count}} online",
+    "offline": "{{count}} offline",
+    "activeCountries": "{{count}} active countries / regions",
+    "ariaLabel": "Global node distribution map",
+    "countrySummary": "{{name}}: {{total}} nodes, {{online}} online, {{offline}} offline",
+    "legend": {
+      "online": "Fully online",
+      "partial": "Partially online",
+      "offline": "Fully offline"
+    },
+    "status": {
+      "online": "Online",
+      "offline": "Offline",
+      "partial": "Partially online"
+    },
+    "unmappedRegions": "Unmapped Regions",
+    "unmappedCount": "Total {{count}} items",
+    "regionNodes": "{{count}} nodes in this region",
+    "stats": {
+      "nodes": "Nodes"
+    },
+    "unclassified": "Unclassified",
+    "viewDetails": "View details for {{name}}",
+    "emptySelectionTitle": "No regions can be displayed right now",
+    "emptySelectionDescription": "These nodes are still counted normally, but their region values do not yet match the map mapping.",
+    "regionUnknown": "Not set"
+  },
+  "nodeDisplay": {
+    "remainingValueCalculator": "Remaining Value Calculator",
+    "defaultView": "Default View",
+    "grid": "Grid",
+    "table": "Table"
+  },
+  "remainingValue": {
+    "title": "Remaining Value Calculator",
+    "description": "Check node remaining value and exchange-rate conversions.",
+    "total": "Total Remaining Value",
+    "totalValue": "Total Value",
+    "monthlyCost": "Monthly Cost",
+    "placeholderPending": "Pending conversion",
+    "refreshRates": "Refresh Rates",
+    "rateProvider": "Online exchange rates are powered by Frankfurter and are only requested after you open the calculator.",
+    "errorRatesUnavailable": "Unable to fetch exchange rates right now",
+    "billingCycle": {
+      "once": "One-time",
+      "days": "{{count}} days"
+    },
+    "remainingTime": {
+      "longTerm": "Long term",
+      "oneTime": "One-time",
+      "value": "{{days}} days {{hours}} hours"
+    },
+    "skipReason": {
+      "missing_price": "Price not set",
+      "missing_currency": "Currency not set",
+      "unsupported_currency": "Currency not supported yet",
+      "missing_expired_at": "Expiration time not set",
+      "invalid_expired_at": "Expiration time format is invalid",
+      "unsupported_billing_cycle": "Billing cycle not set",
+      "default": "Incomplete information"
+    },
+    "card": {
+      "originalPrice": "Original price {{amount}} / {{cycle}}",
+      "remainingTime": "Remaining time {{value}}",
+      "originalValue": "Original currency value {{amount}}",
+      "skipReason": "Skipped because",
+      "expiredValue": "Remaining value 0"
+    },
+    "filter": {
+      "all": "All {{count}}",
+      "active": "Included {{count}}",
+      "skipped": "Skipped {{count}}",
+      "expired": "Expired {{count}}"
+    },
+    "section": {
+      "active": "Included Nodes",
+      "skipped": "Skipped Nodes",
+      "expired": "Expired Nodes"
+    },
+    "empty": {
+      "none": "There are no nodes to display right now",
+      "active": "There are no included nodes right now",
+      "skipped": "There are no skipped nodes right now",
+      "expired": "There are no expired nodes right now"
+    },
+    "rateStatus": {
+      "loading": "Waiting for exchange rates",
+      "stale": "Exchange rates are not the latest",
+      "updatedAt": "Exchange rates updated at {{value}}"
+    }
+  }
 }

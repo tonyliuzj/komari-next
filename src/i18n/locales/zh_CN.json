@@ -243,6 +243,7 @@
     "confirm": "确认",
     "confirm_delete": "确认删除",
     "content": "内容",
+    "dashboard": "仪表盘",
     "day": "天",
     "delete": "删除",
     "deleted_successfully": "已删除",
@@ -288,7 +289,8 @@
     "update": "更新",
     "update_available": "有新版本",
     "updated_successfully": "成功更新",
-    "weight": "权重"
+    "weight": "权重",
+    "map": "地图"
   },
   "copy": "复制",
   "copy_success": "已复制到剪贴板",
@@ -342,7 +344,11 @@
     "password_placeholder": "请输入您的密码",
     "title": "登录",
     "two_factor": "双因素认证",
-    "username": "用户名"
+    "username": "用户名",
+    "required": "Username and password are required.",
+    "failed": "Login failed.",
+    "network_error": "Network error.",
+    "logging_in": "Logging in..."
   },
   "logs": {
     "title": "日志"
@@ -392,7 +398,8 @@
     "virtualization": "虚拟化"
   },
   "nodes": {
-    "empty": "暂无服务器数据"
+    "empty": "暂无服务器数据",
+    "loading": "正在加载节点..."
   },
   "notification": {
     "load": {
@@ -644,6 +651,82 @@
     "title": "设置"
   },
   "status_settings": "状态显示设置",
+  "themeCustomizer": {
+    "themeSettings": "主题设置",
+    "colorTheme": "颜色主题",
+    "cardLayout": "卡片布局",
+    "cardDesign": "卡片设计",
+    "statusDesign": "状态设计",
+    "graphDesign": "图表设计",
+    "backgroundImage": "背景图片",
+    "backgroundImagePlaceholder": "输入图片 URL",
+    "apply": "应用",
+    "clear": "清除",
+    "colorThemes": {
+      "default": "默认",
+      "ocean": "海洋",
+      "sunset": "日落",
+      "forest": "森林",
+      "midnight": "午夜",
+      "rose": "玫瑰"
+    },
+    "cardLayouts": {
+      "classic": {
+        "label": "经典",
+        "description": "传统卡片设计"
+      },
+      "modern": {
+        "label": "现代",
+        "description": "图标左置横向布局"
+      },
+      "minimal": {
+        "label": "极简",
+        "description": "无边框清爽样式"
+      },
+      "detailed": {
+        "label": "详细",
+        "description": "顶部图标居中"
+      }
+    },
+    "cardDesigns": {
+      "default": {
+        "label": "默认",
+        "description": "文本延迟统计"
+      },
+      "qualityBars": {
+        "label": "历史块",
+        "description": "延迟与丢包历史块"
+      }
+    },
+    "statusDesigns": {
+      "default": {
+        "label": "默认",
+        "description": "标准状态卡片数值"
+      },
+      "speed": {
+        "label": "速度仪表",
+        "description": "上传与下载速度仪表指示"
+      }
+    },
+    "graphDesigns": {
+      "circle": {
+        "label": "圆环",
+        "description": "圆形进度"
+      },
+      "progress": {
+        "label": "进度条",
+        "description": "线性进度"
+      },
+      "bar": {
+        "label": "柱状图",
+        "description": "竖向柱状"
+      },
+      "minimal": {
+        "label": "极简",
+        "description": "简单文本"
+      }
+    }
+  },
   "terminal": {
     "disconnect": "连接已断开",
     "no_active_connection": "没有活动连接",
@@ -683,6 +766,7 @@
     "theme_link": "社区维护的主题",
     "theme_url": "主题URL",
     "title": "主题管理",
+    "toggle": "切换主题",
     "update": "更新主题",
     "update_description": "如果原主题URL无法访问，请上传主题包进行更新。",
     "update_failed": "主题更新失败",
@@ -714,5 +798,99 @@
     "mode": "显示模式"
   },
   "warn_https": "当前连接不是 HTTPS！您的敏感数据存在严重风险。请立即采取措施确保连接安全！复制操作可能无法使用！",
-  "warn_websocket": "RPC2 请求失败，请检查网络连接或服务器状态！"
+  "warn_websocket": "RPC2 请求失败，请检查网络连接或服务器状态！",
+  "mapView": {
+    "title": "全球分布",
+    "servers": "{{count}} 台节点",
+    "online": "{{count}} 台在线",
+    "offline": "{{count}} 台离线",
+    "activeCountries": "{{count}} 个活跃国家 / 地区",
+    "ariaLabel": "全球节点分布地图",
+    "countrySummary": "{{name}}：{{total}} 台节点，{{online}} 台在线，{{offline}} 台离线",
+    "legend": {
+      "online": "全部在线",
+      "partial": "部分在线",
+      "offline": "全部离线"
+    },
+    "status": {
+      "online": "在线",
+      "offline": "离线",
+      "partial": "部分在线"
+    },
+    "unmappedRegions": "未显示地区",
+    "unmappedCount": "共 {{count}} 项",
+    "regionNodes": "该地区共 {{count}} 台节点",
+    "stats": {
+      "nodes": "节点数"
+    },
+    "unclassified": "暂未分类",
+    "viewDetails": "查看 {{name}} 详情",
+    "emptySelectionTitle": "当前没有可显示的地区",
+    "emptySelectionDescription": "这些节点仍会正常参与统计，只是地区值暂时还没有命中地图映射。先看左侧“未显示地区”列表，就能知道具体是哪一项需要补充。",
+    "regionUnknown": "未填写"
+  },
+  "nodeDisplay": {
+    "remainingValueCalculator": "剩余价值计算器",
+    "defaultView": "默认视图",
+    "grid": "网格",
+    "table": "表格"
+  },
+  "remainingValue": {
+    "title": "剩余价值计算器",
+    "description": "查看节点剩余价值与汇率换算结果。",
+    "total": "全部剩余价值",
+    "totalValue": "总价值",
+    "monthlyCost": "月成本",
+    "placeholderPending": "暂未换算",
+    "refreshRates": "刷新汇率",
+    "rateProvider": "在线汇率由 Frankfurter 提供，仅会在你打开计算器后发起查询。",
+    "errorRatesUnavailable": "暂时无法获取汇率",
+    "billingCycle": {
+      "once": "一次性",
+      "days": "{{count}} 天"
+    },
+    "remainingTime": {
+      "longTerm": "长期",
+      "oneTime": "一次性",
+      "value": "{{days}} 天 {{hours}} 小时"
+    },
+    "skipReason": {
+      "missing_price": "未填写价格",
+      "missing_currency": "未填写币种",
+      "unsupported_currency": "币种暂不支持",
+      "missing_expired_at": "未填写到期时间",
+      "invalid_expired_at": "到期时间格式无效",
+      "unsupported_billing_cycle": "未填写周期",
+      "default": "信息不完整"
+    },
+    "card": {
+      "originalPrice": "原价 {{amount}} / {{cycle}}",
+      "remainingTime": "剩余时间 {{value}}",
+      "originalValue": "原币种价值 {{amount}}",
+      "skipReason": "未纳入原因",
+      "expiredValue": "剩余价值 0"
+    },
+    "filter": {
+      "all": "全部 {{count}}",
+      "active": "可计算 {{count}}",
+      "skipped": "未纳入 {{count}}",
+      "expired": "已过期 {{count}}"
+    },
+    "section": {
+      "active": "可计算节点",
+      "skipped": "未纳入节点",
+      "expired": "已过期节点"
+    },
+    "empty": {
+      "none": "当前没有可展示的节点",
+      "active": "当前没有可计算的节点",
+      "skipped": "当前没有未纳入的节点",
+      "expired": "暂无已过期节点"
+    },
+    "rateStatus": {
+      "loading": "等待获取汇率",
+      "stale": "汇率非最新",
+      "updatedAt": "汇率更新时间 {{value}}"
+    }
+  }
 }

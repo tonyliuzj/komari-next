@@ -160,7 +160,7 @@ const NodeTable: React.FC<NodeTableProps> = ({ nodes, liveData }) => {
   return (
     <div className="rounded-xl border bg-card text-card-foreground shadow-sm overflow-hidden">
       <div className="overflow-x-auto">
-        <Table className="w-full min-w-[1094px] table-fixed">
+        <Table className={cn("w-full table-fixed", showPriceColumn ? "min-w-[1180px]" : "min-w-[1024px]")}>
           <TableHeader>
             <TableRow className="hover:bg-transparent">
               <TableHead className="w-[30px] px-2"></TableHead>
@@ -226,7 +226,7 @@ const NodeTable: React.FC<NodeTableProps> = ({ nodes, liveData }) => {
               </TableHead>
               {showPriceColumn &&
                 <TableHead
-                  className="w-[100px] cursor-pointer hover:bg-muted/50 transition-colors text-center px-2"
+                  className="w-[156px] cursor-pointer hover:bg-muted/50 transition-colors text-center px-2"
                   onClick={handleSort('price')}
                   title={t("nodeCard.sortTooltip")}
                 >
@@ -372,8 +372,8 @@ const NodeTable: React.FC<NodeTableProps> = ({ nodes, liveData }) => {
                     </div>
                   </TableCell>
                   {showPriceColumn &&
-                    <TableCell className="py-2 px-2">
-                      <div className="flex items-center justify-center">
+                    <TableCell className="py-2 px-1.5">
+                      <div className="flex min-w-0 items-center justify-center">
                         <PriceTags
                           price={node.price}
                           billing_cycle={node.billing_cycle}
@@ -381,6 +381,9 @@ const NodeTable: React.FC<NodeTableProps> = ({ nodes, liveData }) => {
                           currency={node.currency}
                           gap="1"
                           tags={node.tags || ""}
+                          compact
+                          maxCustomTags={3}
+                          className="max-w-[148px] justify-center"
                         />
                       </div>
                     </TableCell>

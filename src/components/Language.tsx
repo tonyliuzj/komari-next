@@ -41,7 +41,9 @@ const LanguageSwitch = ({
         {languages.map((lang) => (
           <DropdownMenuItem
             key={lang.code}
-            onClick={() => i18n.changeLanguage(lang.code)}
+            onSelect={() => {
+              void i18n.changeLanguage(lang.code);
+            }}
           >
             {lang.name} ({lang.code.slice(0, 2)})
           </DropdownMenuItem>

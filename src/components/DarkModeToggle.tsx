@@ -3,6 +3,7 @@
 import { Moon, Sun, Monitor } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -13,6 +14,7 @@ import {
 
 export default function DarkModeToggle() {
   const { theme, setTheme } = useTheme();
+  const { t } = useTranslation();
   const [mounted, setMounted] = useState(false);
 
   // Avoid hydration mismatch
@@ -46,7 +48,9 @@ export default function DarkModeToggle() {
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" size="icon" className="h-9 w-9">
           {getIcon()}
-          <span className="sr-only">Toggle theme</span>
+          <span className="sr-only">
+            {t("theme.toggle", { defaultValue: "Toggle theme" })}
+          </span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
@@ -55,21 +59,21 @@ export default function DarkModeToggle() {
           className={theme === "light" ? "bg-accent" : ""}
         >
           <Sun className="mr-2 h-4 w-4" />
-          <span>Light</span>
+          <span>{t("theme.light", { defaultValue: "Light" })}</span>
         </DropdownMenuItem>
         <DropdownMenuItem
           onClick={() => setTheme("dark")}
           className={theme === "dark" ? "bg-accent" : ""}
         >
           <Moon className="mr-2 h-4 w-4" />
-          <span>Dark</span>
+          <span>{t("theme.dark", { defaultValue: "Dark" })}</span>
         </DropdownMenuItem>
         <DropdownMenuItem
           onClick={() => setTheme("system")}
           className={theme === "system" ? "bg-accent" : ""}
         >
           <Monitor className="mr-2 h-4 w-4" />
-          <span>System</span>
+          <span>{t("theme.system", { defaultValue: "System" })}</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

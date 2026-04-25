@@ -15,7 +15,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { getOSImage, getOSName } from "@/utils";
 import { formatBytes } from "@/utils/unitHelper";
 import { useTheme } from "@/contexts/ThemeContext";
-import { usePingStats } from "@/hooks/usePingStats";
+import { type PingHistoryPoint, type PingStats, usePingStats } from "@/hooks/usePingStats";
 
 import Flag from "./Flag";
 import PriceTags from "./PriceTags";
@@ -82,6 +82,140 @@ function formatTrafficPercentage(value: number): string {
   if (value >= 1) return `${value.toFixed(2)}%`;
   if (value >= 0.01) return `${value.toFixed(3)}%`;
   return "<0.01%";
+}
+
+type QualityTone = "good" | "warn" | "bad";
+
+const qualityToneStyles: {
+  [tone in QualityTone]: { bar: string };
+} = {
+  good: {
+    bar: "bg-emerald-500",
+  },
+  warn: {
+    bar: "bg-amber-500",
+  },
+  bad: {
+    bar: "bg-rose-500",
+  },
+};
+
+function getLatencyTone(latency: number): QualityTone {
+  if (latency <= 80) return "good";
+  if (latency <= 180) return "warn";
+  return "bad";
+}
+
+function getLossTone(loss: number): QualityTone {
+  if (loss <= 1) return "good";
+  if (loss <= 5) return "warn";
+  return "bad";
+}
+
+function formatHistoryTime(time: string) {
+  const date = new Date(time);
+  if (Number.isNaN(date.getTime())) {
+    return "";
+  }
+
+  return date.toLocaleString([], {
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
+
+function PingHistoryStrip({
+  label,
+  value,
+  points,
+  metric,
+}: {
+  label: string;
+  value: string;
+  points: PingHistoryPoint[];
+  metric: "latency" | "loss";
+}) {
+  return (
+    <div className="min-w-0 rounded-md border border-border/45 bg-background/45 px-2 py-1.5">
+      <div className="mb-1 flex items-center justify-between gap-2 text-[10px] leading-none">
+        <span className="truncate text-muted-foreground">{label}</span>
+        <span className="shrink-0 font-mono font-semibold text-foreground/80">{value}</span>
+      </div>
+      <div
+        className="grid h-5 gap-0.5"
+        style={{ gridTemplateColumns: `repeat(${Math.max(points.length, 1)}, minmax(0, 1fr))` }}
+      >
+        {points.map((point, index) => {
+          const metricValue = point[metric];
+          const tone =
+            metricValue === null
+              ? null
+              : metric === "latency"
+                ? getLatencyTone(metricValue)
+                : getLossTone(metricValue);
+          const blockClassName = tone
+            ? qualityToneStyles[tone].bar
+            : "bg-muted-foreground/18";
+          const titleValue =
+            metricValue === null
+              ? "No data"
+              : metric === "latency"
+                ? `${Math.round(metricValue)} ms`
+                : `${metricValue.toFixed(1)}%`;
+
+          return (
+            <span
+              key={`${point.time}-${index}`}
+              className={`min-w-0 rounded-[2px] ${blockClassName}`}
+              title={`${formatHistoryTime(point.time)} ${titleValue}`}
+            />
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function PingQualityBars({ pingStats, t }: { pingStats: PingStats; t: TFunction }) {
+  if (!pingStats.hasData) {
+    return (
+      <div className="flex justify-between items-center">
+        <span className="text-muted-foreground">{t("nodeCard.pingStats")}</span>
+        <span className="text-xs text-muted-foreground/70 italic">{t("nodeCard.noPingData")}</span>
+      </div>
+    );
+  }
+
+  const historyPoints = pingStats.history.length > 0
+    ? pingStats.history
+    : [{ time: new Date().toISOString(), latency: null, loss: null }];
+
+  return (
+    <div className="space-y-2">
+      <div className="flex items-center justify-between gap-2">
+        <span className="text-muted-foreground">{t("nodeCard.pingStats")}</span>
+        <span className="font-mono text-[11px] text-muted-foreground">
+          {pingStats.avgVolatility.toFixed(1)} {t("chart.volatility")}
+        </span>
+      </div>
+      <div className="grid grid-cols-2 gap-2">
+        <PingHistoryStrip
+          label={t("nodeCard.latency", { defaultValue: "Latency" })}
+          value={`${Math.round(pingStats.avgLatency)} ms`}
+          points={historyPoints}
+          metric="latency"
+        />
+        <PingHistoryStrip
+          label={t("chart.lossRate", { defaultValue: "Loss" })}
+          value={`${pingStats.avgLoss.toFixed(1)}%`}
+          points={historyPoints}
+          metric="loss"
+        />
+      </div>
+    </div>
+  );
 }
 
 // --- Components ---
@@ -287,17 +421,21 @@ const Node = ({ basic, live, online }: NodeProps) => {
           <Separator className="opacity-30" />
 
           {/* Ping Statistics */}
-          <div className="flex justify-between items-center">
-            <span className="text-muted-foreground">{t("nodeCard.pingStats")}</span>
-            {pingStats.hasData ? (
-              <div className="flex gap-3 font-mono text-xs text-muted-foreground">
-                <span>{pingStats.avgLoss.toFixed(1)}% {t("chart.lossRate")}</span>
-                <span>{pingStats.avgVolatility.toFixed(1)} {t("chart.volatility")}</span>
-              </div>
-            ) : (
-              <span className="text-xs text-muted-foreground/70 italic">{t("nodeCard.noPingData")}</span>
-            )}
-          </div>
+          {themeConfig.cardDesign === "quality-bars" ? (
+            <PingQualityBars pingStats={pingStats} t={t} />
+          ) : (
+            <div className="flex justify-between items-center">
+              <span className="text-muted-foreground">{t("nodeCard.pingStats")}</span>
+              {pingStats.hasData ? (
+                <div className="flex gap-3 font-mono text-xs text-muted-foreground">
+                  <span>{pingStats.avgLoss.toFixed(1)}% {t("chart.lossRate")}</span>
+                  <span>{pingStats.avgVolatility.toFixed(1)} {t("chart.volatility")}</span>
+                </div>
+              ) : (
+                <span className="text-xs text-muted-foreground/70 italic">{t("nodeCard.noPingData")}</span>
+              )}
+            </div>
+          )}
 
           {/* Traffic Limit Progress (if exists) */}
           {basic.traffic_limit > 0 && (

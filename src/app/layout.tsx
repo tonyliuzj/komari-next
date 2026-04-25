@@ -3,6 +3,7 @@ import "@/global.css";
 import { Providers } from "@/components/providers";
 import NavBar from "@/components/NavBar";
 import Footer from "@/components/Footer";
+import RemainingValueCalculator from "@/components/RemainingValueCalculator";
 
 export const metadata: Metadata = {
   title: "Komari Monitor",
@@ -23,6 +24,7 @@ export default function RootLayout({
             {children}
           </main>
           <Footer />
+          <RemainingValueCalculator />
         </Providers>
       </body>
     </html>

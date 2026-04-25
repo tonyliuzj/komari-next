@@ -2,16 +2,9 @@
 
 import React, { Suspense, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { Settings, Clock, Globe, Activity, ArrowUpRight, Zap } from "lucide-react";
+import { Clock, Globe, Activity, ArrowUpRight, Zap } from "lucide-react";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Switch } from "@/components/ui/switch";
-import { Button } from "@/components/ui/button";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 
 import NodeDisplay from "@/components/NodeDisplay";
 import { formatBytes } from "@/utils/unitHelper";
@@ -20,9 +13,10 @@ import { useNodeList } from "@/contexts/NodeListContext";
 import { usePublicInfo } from "@/contexts/PublicInfoContext";
 import { useTheme } from "@/contexts/ThemeContext";
 import Loading from "@/components/loading";
-import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { CurrentTimeCard } from "@/components/CurrentTimeCard";
 import { Callouts } from "@/components/DashboardCallouts";
+import { NodeMapView } from "@/components/NodeMapView";
+import { useStatusCardsVisibility } from "@/hooks/useStatusCardsVisibility";
 
 // Intelligent speed formatting function
 const formatSpeed = (bytes: number): string => {
@@ -39,6 +33,87 @@ const formatSpeed = (bytes: number): string => {
 
   return `${size.toFixed(decimals)} ${units[i]}`;
 };
+
+function DashboardGauge({
+  value,
+  max = 100,
+  label,
+}: {
+  value: number;
+  max?: number;
+  label?: string;
+}) {
+  const pct = Math.max(0, Math.min(100, (value / max) * 100));
+
+  return (
+    <div className="ds-mini-gauge">
+      <div className="ds-mini-gauge-arc">
+        <div className="ds-mini-gauge-fill" style={{ ["--pct" as string]: `${pct}%` }} />
+        <div className="ds-mini-gauge-center">
+          <div className="ds-mini-gauge-value">{Math.round(value)}</div>
+          {label ? <div className="ds-mini-gauge-label">{label}</div> : null}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+const getDashboardSpeedGaugeMetric = (bytes: number) => {
+  const text = formatSpeed(bytes);
+  const match = text.match(/^([\d.]+)\s*(.+)$/);
+
+  if (!match) {
+    return {
+      value: 0,
+      unit: "B",
+    };
+  }
+
+  return {
+    value: Number(match[1]) || 0,
+    unit: match[2].replace("/s", ""),
+  };
+};
+
+const SpeedStatusValue = ({
+  up,
+  down,
+  upBytes,
+  downBytes,
+}: {
+  up: string;
+  down: string;
+  upBytes: number;
+  downBytes: number;
+}) => {
+  const gaugeMetric = getDashboardSpeedGaugeMetric(Math.max(upBytes, downBytes));
+
+  return (
+    <div className="ds-metric-speed-panel" title={`↑ ${up} / ↓ ${down}`}>
+      <DashboardGauge
+        value={gaugeMetric.value}
+        max={Math.max(10, gaugeMetric.value * 1.3)}
+        label={gaugeMetric.unit}
+      />
+      <div className="ds-metric-speed-dual is-compact" title={`↑ ${up} / ↓ ${down}`} />
+    </div>
+  );
+};
+
+const renderSpeedStatusValue = ({
+  up,
+  down,
+}: {
+  up: number;
+  down: number;
+}) => (
+  <SpeedStatusValue
+    up={formatSpeed(up)}
+    down={formatSpeed(down)}
+    upBytes={up}
+    downBytes={down}
+  />
+);
 
 export default function DashboardContent() {
   const [t] = useTranslation();
@@ -75,17 +150,7 @@ export default function DashboardContent() {
     );
   };
 
-  // Status cards visibility state
-  const [statusCardsVisibility, setStatusCardsVisibility] = useLocalStorage(
-    "statusCardsVisibility",
-    {
-      currentTime: true,
-      currentOnline: true,
-      regionOverview: true,
-      trafficOverview: true,
-      networkSpeed: true,
-    }
-  );
+  const [statusCardsVisibility] = useStatusCardsVisibility();
 
   // Status cards configuration
   const statusCards = [
@@ -149,10 +214,15 @@ export default function DashboardContent() {
       key: "networkSpeed",
       title: t("network_speed"),
       icon: <Zap className="h-4 w-4 text-muted-foreground" />,
+      structuredValue: themeConfig.statusDesign === "speed",
       renderValue: () => {
         const data = live_data?.data?.data;
         const online = live_data?.data?.online;
-        if (!data || !online) return renderTrafficPair("0 B/s", "0 B/s");
+        if (!data || !online) {
+          return themeConfig.statusDesign === "speed"
+            ? renderSpeedStatusValue({ up: 0, down: 0 })
+            : renderTrafficPair("0 B/s", "0 B/s");
+        }
         const onlineSet = new Set(online);
         const values = Object.entries(data)
           .filter(([uuid]) => onlineSet.has(uuid))
@@ -165,7 +235,11 @@ export default function DashboardContent() {
           (acc, node) => acc + (node.network.down || 0),
           0
         );
-        return renderTrafficPair(formatSpeed(up), formatSpeed(down));
+        const upText = formatSpeed(up);
+        const downText = formatSpeed(down);
+        return themeConfig.statusDesign === "speed"
+          ? renderSpeedStatusValue({ up, down })
+          : renderTrafficPair(upText, downText);
       },
       visible: statusCardsVisibility.networkSpeed,
     },
@@ -182,7 +256,7 @@ export default function DashboardContent() {
     return <Loading />;
   }
   if (error) {
-    return <div>Error: {error}</div>;
+    return <div>{t("common.error", { defaultValue: "Error" })}: {error}</div>;
   }
   //#endregion
 
@@ -193,34 +267,6 @@ export default function DashboardContent() {
       <div className="flex flex-col gap-4">
         <div className="flex justify-between items-center px-1">
           <h2 className="text-2xl font-bold tracking-tight">{t("common.dashboard", { defaultValue: "Dashboard" })}</h2>
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button variant="outline" size="sm" className="h-9 gap-2 shadow-sm">
-                <Settings className="h-4 w-4" />
-                <span className="hidden sm:inline">{t("status_settings")}</span>
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-[240px] p-4" align="end">
-              <div className="flex flex-col gap-4">
-                <h4 className="font-semibold leading-none">{t("status_settings")}</h4>
-                <div className="flex flex-col gap-3">
-                  {statusCards.map((card) => (
-                    <StatusSettingSwitch
-                      key={card.key}
-                      label={card.title}
-                      checked={card.visible}
-                      onCheckedChange={(checked) =>
-                        setStatusCardsVisibility({
-                          ...statusCardsVisibility,
-                          [card.key]: checked,
-                        })
-                      }
-                    />
-                  ))}
-                </div>
-              </div>
-            </PopoverContent>
-          </Popover>
         </div>
 
         <div className={`grid ${
@@ -239,12 +285,21 @@ export default function DashboardContent() {
                 value={card.renderValue ? card.renderValue() : card.getValue?.()}
                 icon={card.icon}
                 layout={themeConfig.cardLayout}
+                structuredValue={card.structuredValue}
               />
             ))}
         </div>
+
+        {statusCardsVisibility.mapView && (
+          <NodeMapView
+            nodes={nodeList ?? []}
+            liveData={live_data?.data ?? { online: [], data: {} }}
+            mapOnly
+          />
+        )}
       </div>
 
-      <Suspense fallback={<div className="p-4">Loading nodes...</div>}>
+      <Suspense fallback={<div className="p-4">{t("nodes.loading", { defaultValue: "Loading nodes..." })}</div>}>
         <NodeDisplay
           nodes={nodeList ?? []}
           liveData={live_data?.data ?? { online: [], data: {} }}
@@ -260,9 +315,19 @@ type TopCardProps = {
   description?: string;
   icon?: React.ReactNode;
   layout?: 'classic' | 'modern' | 'minimal' | 'detailed';
+  structuredValue?: boolean;
 };
 
-const TopCard: React.FC<TopCardProps> = ({ title, value, description, icon, layout = 'classic' }) => {
+const TopCard: React.FC<TopCardProps> = ({
+  title,
+  value,
+  description,
+  icon,
+  layout = 'classic',
+  structuredValue = false,
+}) => {
+  const mobileStructuredValueClass = "h-6 w-[5.75rem] shrink-0 overflow-hidden";
+
   // Classic layout: Traditional card with icon on right
   if (layout === 'classic') {
     return (
@@ -276,7 +341,9 @@ const TopCard: React.FC<TopCardProps> = ({ title, value, description, icon, layo
                 {title}
               </div>
             </div>
-            <div className="text-xs font-bold shrink-0 leading-tight">{value}</div>
+            <div className={structuredValue ? mobileStructuredValueClass : "text-xs font-bold shrink-0 leading-tight"}>
+              {value}
+            </div>
           </div>
         </CardContent>
         {/* Desktop: original layout */}
@@ -288,7 +355,7 @@ const TopCard: React.FC<TopCardProps> = ({ title, value, description, icon, layo
             {icon}
           </CardHeader>
           <CardContent>
-            <div className="text-xl font-bold line-clamp-2">{value}</div>
+            <div className={structuredValue ? "min-w-0" : "text-xl font-bold line-clamp-2"}>{value}</div>
             {description && (
               <p className="text-xs text-muted-foreground mt-1">
                 {description}
@@ -313,7 +380,9 @@ const TopCard: React.FC<TopCardProps> = ({ title, value, description, icon, layo
                 {title}
               </div>
             </div>
-            <div className="text-xs font-bold shrink-0 leading-tight">{value}</div>
+            <div className={structuredValue ? mobileStructuredValueClass : "text-xs font-bold shrink-0 leading-tight"}>
+              {value}
+            </div>
           </div>
         </CardContent>
         {/* Desktop: original layout */}
@@ -328,7 +397,7 @@ const TopCard: React.FC<TopCardProps> = ({ title, value, description, icon, layo
               <div className="text-[9px] font-semibold text-primary uppercase tracking-wider mb-0.5">
                 {title}
               </div>
-              <div className="text-lg font-bold leading-tight line-clamp-2 [&>div]:space-y-0.5">{value}</div>
+              <div className={structuredValue ? "min-w-0" : "text-lg font-bold leading-tight line-clamp-2 [&>div]:space-y-0.5"}>{value}</div>
               {description && (
                 <div className="mt-0.5 text-xs text-muted-foreground">
                   {description}
@@ -354,7 +423,7 @@ const TopCard: React.FC<TopCardProps> = ({ title, value, description, icon, layo
                 {title}
               </div>
             </div>
-            <div className="text-xs font-black bg-gradient-to-br from-foreground to-foreground/70 bg-clip-text text-transparent shrink-0 leading-tight">
+            <div className={structuredValue ? mobileStructuredValueClass : "text-xs font-black bg-gradient-to-br from-foreground to-foreground/70 bg-clip-text text-transparent shrink-0 leading-tight"}>
               {value}
             </div>
           </div>
@@ -364,7 +433,7 @@ const TopCard: React.FC<TopCardProps> = ({ title, value, description, icon, layo
           <div className="absolute top-2.5 right-2.5 opacity-30 scale-75">
             {icon}
           </div>
-          <div className="text-2xl font-black mb-1.5 bg-gradient-to-br from-foreground to-foreground/70 bg-clip-text text-transparent line-clamp-2 pr-8">
+          <div className={structuredValue ? "mb-2 min-w-0 pr-8" : "text-2xl font-black mb-1.5 bg-gradient-to-br from-foreground to-foreground/70 bg-clip-text text-transparent line-clamp-2 pr-8"}>
             {value}
           </div>
           <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
@@ -393,7 +462,9 @@ const TopCard: React.FC<TopCardProps> = ({ title, value, description, icon, layo
                 {title}
               </div>
             </div>
-            <div className="text-xs font-extrabold shrink-0 leading-tight">{value}</div>
+            <div className={structuredValue ? mobileStructuredValueClass : "text-xs font-extrabold shrink-0 leading-tight"}>
+              {value}
+            </div>
           </div>
         </CardContent>
         {/* Desktop: original layout */}
@@ -409,7 +480,7 @@ const TopCard: React.FC<TopCardProps> = ({ title, value, description, icon, layo
             </h3>
           </div>
           <div className="p-4 text-center bg-gradient-to-b from-background to-muted/20">
-            <div className="text-2xl font-extrabold mb-1 tracking-tight line-clamp-2">{value}</div>
+            <div className={structuredValue ? "mb-1 min-w-0" : "text-2xl font-extrabold mb-1 tracking-tight line-clamp-2"}>{value}</div>
             {description && (
               <div className="text-xs text-muted-foreground font-medium">
                 {description}
@@ -422,23 +493,4 @@ const TopCard: React.FC<TopCardProps> = ({ title, value, description, icon, layo
   }
 
   return null;
-};
-
-type StatusSettingSwitchProps = {
-  label: string;
-  checked: boolean;
-  onCheckedChange: (checked: boolean) => void;
-};
-
-const StatusSettingSwitch: React.FC<StatusSettingSwitchProps> = ({
-  label,
-  checked,
-  onCheckedChange,
-}) => {
-  return (
-    <div className="flex items-center justify-between">
-      <span className="text-sm">{label}</span>
-      <Switch checked={checked} onCheckedChange={onCheckedChange} />
-    </div>
-  );
 };

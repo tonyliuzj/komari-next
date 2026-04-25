@@ -243,6 +243,7 @@
     "confirm": "確認",
     "confirm_delete": "確認刪除",
     "content": "內容",
+    "dashboard": "儀表板",
     "day": "天",
     "delete": "刪除",
     "deleted_successfully": "已刪除",
@@ -288,7 +289,8 @@
     "update": "更新",
     "update_available": "有新版本",
     "updated_successfully": "成功更新",
-    "weight": "權重"
+    "weight": "權重",
+    "map": "地圖"
   },
   "copy": "複製",
   "copy_success": "已複製到剪貼板",
@@ -342,7 +344,11 @@
     "password_placeholder": "請輸入您的密碼",
     "title": "登入",
     "two_factor": "雙因素認證",
-    "username": "用戶名"
+    "username": "用戶名",
+    "required": "Username and password are required.",
+    "failed": "Login failed.",
+    "network_error": "Network error.",
+    "logging_in": "Logging in..."
   },
   "logs": {
     "title": "日誌"
@@ -392,7 +398,8 @@
     "virtualization": "虛擬化"
   },
   "nodes": {
-    "empty": "暫無伺服器資料"
+    "empty": "暫無伺服器資料",
+    "loading": "正在加載節點..."
   },
   "notification": {
     "load": {
@@ -644,6 +651,82 @@
     "title": "設置"
   },
   "status_settings": "狀態顯示設置",
+  "themeCustomizer": {
+    "themeSettings": "主題設定",
+    "colorTheme": "顏色主題",
+    "cardLayout": "卡片布局",
+    "cardDesign": "卡片設計",
+    "statusDesign": "狀態設計",
+    "graphDesign": "圖表設計",
+    "backgroundImage": "背景圖片",
+    "backgroundImagePlaceholder": "輸入圖片 URL",
+    "apply": "套用",
+    "clear": "清除",
+    "colorThemes": {
+      "default": "預設",
+      "ocean": "海洋",
+      "sunset": "日落",
+      "forest": "森林",
+      "midnight": "午夜",
+      "rose": "玫瑰"
+    },
+    "cardLayouts": {
+      "classic": {
+        "label": "經典",
+        "description": "傳統卡片設計"
+      },
+      "modern": {
+        "label": "現代",
+        "description": "圖標左置橫向布局"
+      },
+      "minimal": {
+        "label": "極簡",
+        "description": "無邊框清爽樣式"
+      },
+      "detailed": {
+        "label": "詳細",
+        "description": "頂部圖標居中"
+      }
+    },
+    "cardDesigns": {
+      "default": {
+        "label": "預設",
+        "description": "文本延遲統計"
+      },
+      "qualityBars": {
+        "label": "歷史塊",
+        "description": "延遲與丟包歷史塊"
+      }
+    },
+    "statusDesigns": {
+      "default": {
+        "label": "預設",
+        "description": "標準狀態卡片數值"
+      },
+      "speed": {
+        "label": "速度儀表",
+        "description": "上傳與下載速度儀表指示"
+      }
+    },
+    "graphDesigns": {
+      "circle": {
+        "label": "圓環",
+        "description": "圓形進度"
+      },
+      "progress": {
+        "label": "進度條",
+        "description": "線性進度"
+      },
+      "bar": {
+        "label": "柱狀圖",
+        "description": "垂直柱狀"
+      },
+      "minimal": {
+        "label": "極簡",
+        "description": "簡單文本"
+      }
+    }
+  },
   "terminal": {
     "disconnect": "連接已斷開",
     "no_active_connection": "沒有活動連接",
@@ -683,6 +766,7 @@
     "theme_link": "社區維護的主題",
     "theme_url": "主題URL",
     "title": "主題管理",
+    "toggle": "切換主題",
     "update": "更新主題",
     "update_description": "如果原主題URL無法訪問，請上傳主題包進行更新。",
     "update_failed": "主題更新失敗",
@@ -714,5 +798,99 @@
     "mode": "顯示模式"
   },
   "warn_https": "當前連接不是 HTTPS！您的敏感數據存在嚴重風險。請立即採取措施確保連接安全！複製操作可能無法使用！",
-  "warn_websocket": "RPC2 請求失敗，請檢查網絡連接或伺服器狀態！"
+  "warn_websocket": "RPC2 請求失敗，請檢查網絡連接或伺服器狀態！",
+  "mapView": {
+    "title": "全球分布",
+    "servers": "{{count}} 台節點",
+    "online": "{{count}} 台在線",
+    "offline": "{{count}} 台離線",
+    "activeCountries": "{{count}} 個活躍國家 / 地區",
+    "ariaLabel": "全球節點分布地圖",
+    "countrySummary": "{{name}}：{{total}} 台節點，{{online}} 台在線，{{offline}} 台離線",
+    "legend": {
+      "online": "全部在線",
+      "partial": "部分在線",
+      "offline": "全部離線"
+    },
+    "status": {
+      "online": "在線",
+      "offline": "離線",
+      "partial": "部分在線"
+    },
+    "unmappedRegions": "未顯示地區",
+    "unmappedCount": "共 {{count}} 項",
+    "regionNodes": "該地區共 {{count}} 台節點",
+    "stats": {
+      "nodes": "節點數"
+    },
+    "unclassified": "暫未分類",
+    "viewDetails": "查看 {{name}} 詳情",
+    "emptySelectionTitle": "目前沒有可顯示的地區",
+    "emptySelectionDescription": "這些節點仍會正常參與統計，只是地區值暫時還沒有命中地圖映射。先看左側「未顯示地區」列表，就能知道具體是哪一項需要補充。",
+    "regionUnknown": "未填寫"
+  },
+  "nodeDisplay": {
+    "remainingValueCalculator": "剩餘價值計算器",
+    "defaultView": "預設檢視",
+    "grid": "網格",
+    "table": "表格"
+  },
+  "remainingValue": {
+    "title": "剩餘價值計算器",
+    "description": "查看節點剩餘價值與匯率換算結果。",
+    "total": "全部剩餘價值",
+    "totalValue": "總價值",
+    "monthlyCost": "月成本",
+    "placeholderPending": "暫未換算",
+    "refreshRates": "刷新匯率",
+    "rateProvider": "在線匯率由 Frankfurter 提供，僅會在你打開計算器後發起查詢。",
+    "errorRatesUnavailable": "暫時無法獲取匯率",
+    "billingCycle": {
+      "once": "一次性",
+      "days": "{{count}} 天"
+    },
+    "remainingTime": {
+      "longTerm": "長期",
+      "oneTime": "一次性",
+      "value": "{{days}} 天 {{hours}} 小時"
+    },
+    "skipReason": {
+      "missing_price": "未填寫價格",
+      "missing_currency": "未填寫幣種",
+      "unsupported_currency": "幣種暫不支援",
+      "missing_expired_at": "未填寫到期時間",
+      "invalid_expired_at": "到期時間格式無效",
+      "unsupported_billing_cycle": "未填寫週期",
+      "default": "資訊不完整"
+    },
+    "card": {
+      "originalPrice": "原價 {{amount}} / {{cycle}}",
+      "remainingTime": "剩餘時間 {{value}}",
+      "originalValue": "原幣種價值 {{amount}}",
+      "skipReason": "未納入原因",
+      "expiredValue": "剩餘價值 0"
+    },
+    "filter": {
+      "all": "全部 {{count}}",
+      "active": "可計算 {{count}}",
+      "skipped": "未納入 {{count}}",
+      "expired": "已過期 {{count}}"
+    },
+    "section": {
+      "active": "可計算節點",
+      "skipped": "未納入節點",
+      "expired": "已過期節點"
+    },
+    "empty": {
+      "none": "目前沒有可展示的節點",
+      "active": "目前沒有可計算的節點",
+      "skipped": "目前沒有未納入的節點",
+      "expired": "暫無已過期節點"
+    },
+    "rateStatus": {
+      "loading": "等待獲取匯率",
+      "stale": "匯率非最新",
+      "updatedAt": "匯率更新時間 {{value}}"
+    }
+  }
 }
