@@ -121,6 +121,10 @@ npm run build
 欢迎贡献。
 如果你发现问题或有改进想法，欢迎提交 issue 或 pull request。
 
+## 感谢
+[piphase/komari-nexus](https://github.com/piphase/komari-nexus)
+[fanchengliu/komari-next-pro](https://github.com/fanchengliu/komari-next-pro)
+
 ## Star 历史
 
 [![Star History Chart](https://api.star-history.com/svg?repos=tonyliuzj/komari-next\&type=date\&legend=top-left)](https://www.star-history.com/#tonyliuzj/komari-next&type=date&legend=top-left)
