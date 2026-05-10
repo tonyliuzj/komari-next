@@ -10,6 +10,8 @@ const NodeTable = React.lazy(() => import("./NodeTable"));
 import { isRegionMatch } from "@/utils/regionHelper";
 import "./NodeDisplay.css";
 
+import { NodeCardLumina } from './NodeCardLumina';
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -233,7 +235,15 @@ const NodeDisplay: React.FC<NodeDisplayProps> = ({ nodes, liveData }) => {
       ) : (
         <>
           {viewMode === "grid" ? (
-            <NodeGrid nodes={filteredNodes} liveData={liveData} />
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            {filteredNodes.map((node) => (
+              <NodeCardLumina 
+                key={node.uuid} 
+                node={node} 
+                data={liveData?.data?.[node.uuid]} 
+              />
+            ))}
+          </div>
           ) : (
             <Suspense
               fallback={<div className="p-4 text-center">Loading table...</div>}
