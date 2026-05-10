@@ -399,4 +399,18 @@ body, * {
     radial-gradient(at 60% 100%, oklch(0.5 0.2 10 / 0.12) 0px, transparent 50%);
 }
 
+@layer base {
+  :root {
+    --color-surface: 255 255 255;
+    --color-surface-variant: 240 240 240;
+  }
+  .dark {
+    --color-surface: 20 20 20;
+    --color-surface-variant: 35 35 35;
+  }
+}
+
+.lumina-card {
+  @apply bg-white/10 dark:bg-black/20 backdrop-blur-md border border-white/10 dark:border-white/5 rounded-xl transition-all duration-300;
+}
 
