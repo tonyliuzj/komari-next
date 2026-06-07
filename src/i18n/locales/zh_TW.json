@@ -693,6 +693,10 @@
         "label": "經典",
         "description": "傳統卡片設計"
       },
+      "compact": {
+        "label": "緊湊",
+        "description": "緊湊顯示資訊"
+      },
       "modern": {
         "label": "現代",
         "description": "圖標左置橫向布局"

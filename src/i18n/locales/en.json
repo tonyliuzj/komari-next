@@ -693,6 +693,10 @@
         "label": "Classic",
         "description": "Traditional card design"
       },
+      "compact": {
+        "label": "Compact",
+        "description": "Dense information display"
+      },
       "modern": {
         "label": "Modern",
         "description": "Icon left, horizontal"

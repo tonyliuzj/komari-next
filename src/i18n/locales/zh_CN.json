@@ -847,6 +847,10 @@
         "description": "传统卡片设计",
         "label": "经典"
       },
+      "compact": {
+        "description": "紧凑显示信息",
+        "label": "紧凑"
+      },
       "detailed": {
         "description": "顶部图标居中",
         "label": "详细"

@@ -33,7 +33,8 @@
                     "classic",
                     "modern",
                     "minimal",
-                    "detailed"
+                    "detailed",
+                    "compact"
                 ],
                 "default": "classic"
             },
@@ -234,7 +235,7 @@
                     "en-US": "Default Card Layout"
                 },
                 "default": "classic",
-                "options": "classic,modern,minimal,detailed"
+                "options": "classic,modern,minimal,detailed,compact"
             },
             {
                 "key": "cardDesign",
@@ -478,7 +479,7 @@
                     "en-US": "Default Card Layout"
                 },
                 "default": "classic",
-                "options": "classic,modern,minimal,detailed"
+                "options": "classic,modern,minimal,detailed,compact"
             },
             {
                 "key": "cardDesign",
@@ -726,7 +727,7 @@
                     "en-US": "Default Card Layout"
                 },
                 "default": "classic",
-                "options": "classic,modern,minimal,detailed"
+                "options": "classic,modern,minimal,detailed,compact"
             },
             {
                 "key": "cardDesign",
@@ -974,7 +975,7 @@
                     "en-US": "Default Card Layout"
                 },
                 "default": "classic",
-                "options": "classic,modern,minimal,detailed"
+                "options": "classic,modern,minimal,detailed,compact"
             },
             {
                 "key": "cardDesign",

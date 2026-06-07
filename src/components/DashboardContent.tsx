@@ -276,6 +276,7 @@ export default function DashboardContent() {
           themeConfig.cardLayout === 'modern' ? 'grid-cols-1 gap-3 md:grid-cols-2 md:auto-rows-[96px] xl:grid-cols-3' :
           themeConfig.cardLayout === 'minimal' ? 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3' :
           themeConfig.cardLayout === 'detailed' ? 'grid-cols-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4' :
+          themeConfig.cardLayout === 'compact' ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3 sm:gap-4' :
           'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3 sm:gap-4'
         }`}>
           {statusCards
@@ -316,7 +317,7 @@ type TopCardProps = {
   value: string | number | React.ReactNode;
   description?: string;
   icon?: React.ReactNode;
-  layout?: 'classic' | 'modern' | 'minimal' | 'detailed';
+  layout?: 'classic' | 'modern' | 'minimal' | 'detailed' | 'compact';
   structuredValue?: boolean;
 };
 
@@ -490,6 +491,45 @@ const TopCard: React.FC<TopCardProps> = ({
             )}
           </div>
         </CardContent>
+      </Card>
+    );
+  }
+
+  // Compact layout: Same visual as classic, fully independent
+  if (layout === 'compact') {
+    return (
+      <Card className="overflow-hidden border shadow-sm bg-card hover:shadow-md transition-shadow duration-200">
+        {/* Mobile: single line layout */}
+        <CardContent className="p-3 sm:hidden">
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2 min-w-0 flex-1">
+              {icon}
+              <div className="text-xs font-medium text-muted-foreground whitespace-nowrap">
+                {title}
+              </div>
+            </div>
+            <div className={structuredValue ? mobileStructuredValueClass : "text-xs font-bold shrink-0 leading-tight"}>
+              {value}
+            </div>
+          </div>
+        </CardContent>
+        {/* Desktop: classic-style layout */}
+        <div className="hidden sm:block">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-xs font-medium text-muted-foreground">
+              {title}
+            </CardTitle>
+            {icon}
+          </CardHeader>
+          <CardContent>
+            <div className={structuredValue ? "min-w-0" : "text-xl font-bold line-clamp-2"}>{value}</div>
+            {description && (
+              <p className="text-xs text-muted-foreground mt-1">
+                {description}
+              </p>
+            )}
+          </CardContent>
+        </div>
       </Card>
     );
   }

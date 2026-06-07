@@ -9,6 +9,7 @@ import { NodeGrid } from "./Node";
 const NodeTable = React.lazy(() => import("./NodeTable"));
 import { isRegionMatch } from "@/utils/regionHelper";
 import "./NodeDisplay.css";
+import { useTheme } from "@/contexts/ThemeContext";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -29,6 +30,32 @@ const NodeDisplay: React.FC<NodeDisplayProps> = ({ nodes, liveData }) => {
     "all"
   );
   const searchRef = useRef<HTMLInputElement>(null);
+  const { isThemeLoaded, themeConfig } = useTheme();
+
+  // 背景图片加载状态：无背景图视为已就绪；有背景图时等 preload 完成后再显示内容
+  const [bgReady, setBgReady] = useState(false);
+  useEffect(() => {
+    if (!isThemeLoaded) {
+      setBgReady(false);
+      return;
+    }
+    const url = themeConfig.backgroundImageUrl;
+    if (!url) {
+      setBgReady(true);
+      return;
+    }
+    // 检查 ThemeContext 注入的 preload link 是否已触发加载
+    // 直接用 Image 对象请求同一 URL，浏览器会命中 preload 缓存，几乎零延迟
+    setBgReady(false);
+    const img = new Image();
+    img.onload = () => setBgReady(true);
+    img.onerror = () => setBgReady(true);
+    img.src = url;
+    return () => {
+      img.onload = null;
+      img.onerror = null;
+    };
+  }, [isThemeLoaded, themeConfig.backgroundImageUrl]);
 
   // 获取所有的分组
   const groups = useMemo(() => {
@@ -233,7 +260,9 @@ const NodeDisplay: React.FC<NodeDisplayProps> = ({ nodes, liveData }) => {
       ) : (
         <>
           {viewMode === "grid" ? (
-            <NodeGrid nodes={filteredNodes} liveData={liveData} />
+            bgReady
+              ? <NodeGrid nodes={filteredNodes} liveData={liveData} />
+              : <div className="py-4 w-full min-h-[200px]" />
           ) : (
             <Suspense
               fallback={<div className="p-4 text-center">Loading table...</div>}

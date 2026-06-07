@@ -15,7 +15,7 @@ import { updateSettings } from "@/lib/api";
 import i18n, { detectClientLanguage, normalizeLanguage } from "@/i18n/config";
 
 export type ColorTheme = "default" | "ocean" | "sunset" | "forest" | "midnight" | "rose";
-export type CardLayout = "classic" | "modern" | "minimal" | "detailed";
+export type CardLayout = "classic" | "modern" | "minimal" | "detailed" | "compact";
 export type CardDesign = "default" | "quality-bars";
 export type StatusDesign = "default" | "speed";
 export type GraphDesign = "circle" | "progress" | "bar" | "minimal";
@@ -105,7 +105,7 @@ const I18NEXT_STORAGE_KEY = "i18nextLng";
 const LOCAL_OVERRIDE_BASE_SIGNATURE_KEY = "komari-theme-local-override-base";
 
 const COLOR_THEMES: ColorTheme[] = ["default", "ocean", "sunset", "forest", "midnight", "rose"];
-const CARD_LAYOUTS: CardLayout[] = ["classic", "modern", "minimal", "detailed"];
+const CARD_LAYOUTS: CardLayout[] = ["classic", "modern", "minimal", "detailed", "compact"];
 const CARD_DESIGNS: CardDesign[] = ["default", "quality-bars"];
 const STATUS_DESIGNS: StatusDesign[] = ["default", "speed"];
 const GRAPH_DESIGNS: GraphDesign[] = ["circle", "progress", "bar", "minimal"];
@@ -1048,6 +1048,10 @@ export const ThemeProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     document.body.style.backgroundPosition = "";
     document.body.style.backgroundAttachment = "";
 
+    // 清理上一个 preload link（如果有）
+    const prevPreload = document.head.querySelector("link[data-komari-bg-preload]");
+    if (prevPreload) prevPreload.remove();
+
     if (!themeConfig.backgroundImageUrl) {
       delete document.body.dataset.customBackground;
       document.body.style.removeProperty("--komari-custom-background-image");
@@ -1058,6 +1062,15 @@ export const ThemeProvider: React.FC<{ children: ReactNode }> = ({ children }) =
       document.body.style.removeProperty("--komari-custom-background-mask-opacity");
       return;
     }
+
+    // 注入 preload，让浏览器以最高优先级提前下载背景图
+    const preload = document.createElement("link");
+    preload.rel = "preload";
+    preload.as = "image";
+    preload.href = themeConfig.backgroundImageUrl;
+    preload.setAttribute("data-komari-bg-preload", "true");
+    // 插到 <head> 最前面，优先级最高
+    document.head.insertBefore(preload, document.head.firstChild);
 
     const { filter, bleed } = getBackgroundBlurPresentation(
       themeConfig.backgroundBlurType,
